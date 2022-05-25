@@ -2,22 +2,13 @@
 #include <stdio.h>
 #include <conio.h>
 
-#define TAM_MAX_CONTATOS 100
+#define TAM_MAX_CONTATOS 500
 
 struct aniversario
 {
     int dia;
     int mes;
     int ano;
-};
-
-struct endereco
-{
-    char rua[30];
-    int numero;
-    char bairro[30];
-    char cidade[30];
-
 };
 
 struct telefone
@@ -28,69 +19,56 @@ struct telefone
 
 typedef struct ficha
 {
-    char nome[40];
-    char email[40];
-    struct telefone telefone;
-    struct aniversario aniversario;
-    struct endereco endereco;
+    char     nome[50];
+    enum     tipoEndereco {Alameda = 1, Avenida, Praca, Rua, Travessa};
+    char     endereco[50];
+    unsigned int numero;
+    struct   telefone tel;
+    struct   email email;
+    char     redeSocial[30];
+    enum     tipoRede {Insta = 1, Facebook, Twitter, Linkedin, Outros};
+    struct   aniversario aniversario;
 
-} contato;
+} cadastro;
 
 int main()
 {
-    contato contatos[TAM_MAX_CONTATOS];
+    cadastro contatos[TAM_MAX_CONTATOS];
+    int op, i = 0;
 
-    int op1, i = 0;
-
-    do {
+    do 
+    {
         system("cls");
-        printf(" AGENDA TELEFONICA \n"        );
-        printf("    ( 1 ) CADASTRAR CONTATO\n");
-        printf("    ( 2 ) LISTAR CONTATOS\n"  );
-        printf("    ( 3 ) EXCLUIR CONTATO\n"  );
-        printf("    ( 4 ) SAIR\n"             );
+        printf("\tAGENDA TELEFONICA\n"        );
+        printf("\n ( 1 ) ADICIONAR CONTATO\n");
+        printf("\n ( 2 ) MODIFICAR CONTATO\n");
+        printf("\n ( 3 ) PESQUISAR CONTATO\n");
+        printf("\n ( 4 ) EXCLUIR CONTATO\n");
+        printf("\n ( 5 ) LISTAR CONTATOS\n");
+        printf("\n ( 6 ) SAIR\n");
 
-        printf("\n ESCOLHA UMA OPCAO: "       );
-        scanf ("%i", &op1);
+        printf("\n ESCOLHA UMA OPCAO: ");
+        scanf ("%i", &op);
         fflush(stdin);
 
-        switch (op1)
+        switch (op)
         {
             case 1:
+                printf("Nome: ");
+                 
                 
-                printf("CONTATO: %i\n", i);
-
-                printf("NOME: ");
-                scanf ("%[^\n]s", contatos[i].nome);
-                fflush(stdin);
-
-                printf("EMAIL: ");
-                scanf ("%[^\n]s", contatos[i].email);
-                fflush(stdin);
-
-                printf("DDD: ");
-                scanf ("%[^\n]s", contatos[i].telefone.ddd);
-                fflush(stdin);
-
-                printf("TELEFONE: ");
-                scanf ("%[^\n]s", contatos[i].telefone.tel);
-                fflush(stdin);
-
-                printf("ENDERECO: ");
-                scanf ("%[^\n]s, %i, %[^\n]s, %[^\n]s", contatos[i].endereco.rua,
-                contatos[i].endereco.numero, contatos[i].endereco.bairro, contatos[i].endereco.cidade);
-                fflush(stdin);
-
-                printf("ANIVERSARIO: ");
-                scanf ("%i/%i/%i", &contatos[i].aniversario.dia, &contatos[i].aniversario.mes, &contatos[i].aniversario.ano);
-                fflush(stdin);
-
-                i++;
-                
-            break;
+                break;
+            
         }
 
-    } while(op1 != 4);
+    } while(op != 6);
 
     return 0;
+}
+
+void adicionarContato()
+{
+    
+    
+    
 }
