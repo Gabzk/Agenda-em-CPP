@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <conio.h>
+#include <string.h>
 
 #define TAM_MAX_CONTATOS 500
 
@@ -15,6 +16,12 @@ struct telefone
 {
     char ddd[3];
     char tel[9];
+};
+
+struct email
+{
+    char nomeEmail[30];
+    char dominio[30];
 };
 
 typedef struct ficha
@@ -35,6 +42,8 @@ int main()
 {
     cadastro contatos[TAM_MAX_CONTATOS];
     int op, i = 0;
+    system ("color 9F");
+
 
     do 
     {
