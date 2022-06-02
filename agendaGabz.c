@@ -14,41 +14,57 @@ enum tipoEndereco {Alameda = 1, Avenida, Praca, Rua, Travessa};
 // Registro definindo todas as informações que o contato vai salvar
 typedef struct ficha
 {
-    char     nome[50];
-    char     email[50];
-    char     telefone[12];
-    enum     tipoContato tpC;
-    int      tipoCont;
-    enum     tipoEndereco tpE;
-    int      tipoEnd;
-    char     endereco[50];
-    char     bairro[30];
-    unsigned int numero;
-    char     redeSocial[30];
-    enum     tipoRede tpR;
-    int      tipoR;
-    char     contatoPersonalizado[15];
-    char     redeSocialPersonalizada[15];
+    char    nome[50];
+    char    email[50];
+    char    telefone[12];
+    enum    tipoContato tpC;
+    int     tipoCont;
+    enum    tipoEndereco tpE;
+    int     tipoEnd;
+    char    endereco[50];
+    char    bairro[30];
+    int     numero;
+    char    redeSocial[30];
+    enum    tipoRede tpR;
+    int     tipoR;
+    char    contatoPersonalizado[15];
+    char    redeSocialPersonalizada[15];
+
 } cadastro;
 
-void adicionar();
-void listar();
+
+
+FILE *agenda = NULL;
+cadastro contatos[TAM_MAX_CONTATOS];
+
+
+
+void menu(void);
+void adicionar(void);
+void listar(void);
+
+
 
 int main()
-{
-    cadastro contatos[TAM_MAX_CONTATOS];
-    cadastro *ptrContatos;
+{ 
+    agenda = fopen("agenda1.txt", "a");
+    if( agenda == NULL)
+    {
+        printf("Erro ao abrir arquivo, encerrando programa.\n");
+        exit(0);
+    }
 
-    ptrContatos = &contatos[TAM_MAX_CONTATOS];
-    
-    system ("color 9F"); // Definindo cor do programa
+    system ("color 9F");
+    menu();
 
-    // Variáves inteiras de auxílio
-    int opcao, indice = 0; 
-   
+    return 0;
+}
 
 
-    do
+void menu(void)
+{   
+    int opcao;
+    while (opcao != 6)
     {
         // Menu do programa
         system("cls");
@@ -66,219 +82,117 @@ int main()
 
         switch (opcao)
         {
-            // Case responsável pela inclusão de um novo contato
             case 1:
-
-                indice++;
-                adicionar(ptrContatos[indice]);
+                system("cls");
+                adicionar();
                 
-                break;
+            break;
             
             case 2:
 
-
-                break;
+            break;
 
             case 3:
 
+            break;
 
-
-                break;
-            // Case responsável por excluir um contato
             case 4:
+          
+            break;
 
-
-
-                break;
-
-            // Case responsável pela listagem de todos os contatos
             case 5:
-                
-                break;
+
+            break;
 
             case 6:
-
-
-                break;
-
-            default:
-
-
-
-                break;
+                system("cls");
+                printf("Programa Encerrado");
+                fclose(agenda);
+            break;
         }
+    }
 
-    } while(opcao != 6);
-
-    return 0;
 }
 
-void adicionar(cadastro contatos)
+void adicionar(void)
 {
+    int nContatos = 0, gravar;
+
     printf("Nome: ");
-    scanf("%[^\n]", contatos.nome);
+    scanf("%[^\n]s", contatos[nContatos].nome);
     fflush(stdin);
 
     printf("\nEmail: ");
-    scanf("%[^\n]", contatos.email);
+    scanf("%[^\n]s", contatos[nContatos].email);
     fflush(stdin);
 
     printf("\nDDD e Telefone: ");
-    scanf("%[^\n]", contatos.telefone);
+    scanf("%[^\n]s", contatos[nContatos].telefone);
     fflush(stdin);
 
     printf("\nTipo de contatos:\n( 1 ) Comercial\n( 2 ) Fixo\n( 3 ) Pessoal\n( 4 ) Fax\n( 5 ) Personalizado\n Sua escolha:");
-    scanf("%i", &contatos.tipoCont);
-    contatos.tpC = contatos.tipoCont;
+    scanf("%i", &contatos[nContatos].tipoCont);
     fflush(stdin);
 
-    if(contatos.tpC == 5)
+    if(contatos[nContatos].tipoCont == 5)
     {
         printf("\nDigite o tipo de contato: ");
-        scanf ("%[^\n]", contatos.contatoPersonalizado);
+        scanf ("%[^\n]s", contatos[nContatos].contatoPersonalizado);
         fflush(stdin);
     }
 
     printf("\nTipo do endereço:\n( 1 ) Alameda\n( 2 ) Avenida\n( 3 ) Praca\n( 4 ) Rua\n( 5 ) Travessa\n Sua escolha:");
-    scanf("%i", &contatos.tpE);
+    scanf("%i", &contatos[nContatos].tipoEnd);
     fflush(stdin);
 
     printf("\nEndereço: ");
-    scanf("%[^\n]", contatos.endereco);
+    scanf("%[^\n]s", contatos[nContatos].endereco);
     fflush(stdin);
 
     printf("\nNumero: ");
-    scanf("%i", &contatos.numero);
+    scanf("%i", &contatos[nContatos].numero);
     fflush(stdin);
 
     printf("\nBairro: ");
-    scanf("%[^\n]", contatos.bairro);
+    scanf("%[^\n]s", contatos[nContatos].bairro);
     fflush(stdin);
 
     printf("\nTipo do Rede Social:\n( 1 ) Instagram\n( 2 ) Facebook\n( 3 ) Twitter\n( 4 ) Linkedin\n( 5 ) Personalizado\n Sua escolha:");
-    scanf("%i", &contatos.tpR);
+    scanf("%i", &contatos[nContatos].tipoR);
     fflush(stdin);
 
-    if(contatos.tpR == 5)
+    if(contatos[nContatos].tipoR == 5)
     {
         printf("\nDigite o tipo de Rede Social: ");
-        scanf ("%[^\n]", contatos.redeSocialPersonalizada);
+        scanf ("%[^\n]s", contatos[nContatos].redeSocialPersonalizada);
         fflush(stdin);
-    }   
+    }
 
+    printf("Digite o usuário: ");
+    scanf("%[^\n]s", contatos[nContatos].redeSocial);
+    fflush(stdin);
 
+    getchar();
+    printf("Pressione Enter para continuar");
+
+    fprintf( agenda, "%s; %s; %s; %i; %i; %s; %i; %s; %i; %s; %s; %s\n\n", contatos[nContatos].nome,contatos[nContatos].email, 
+    contatos[nContatos].telefone, contatos[nContatos].tipoCont, contatos[nContatos].tipoEnd, contatos[nContatos].endereco, 
+    contatos[nContatos].numero, contatos[nContatos].bairro, contatos[nContatos].tipoR, contatos[nContatos].redeSocial, 
+    contatos[nContatos].contatoPersonalizado, contatos[nContatos].redeSocialPersonalizada);
+
+    nContatos++;
 }
 
-/*void listar(cadastro contatos[TAM_MAX_CONTATOS], int i)
+void listar(void)
 {
-    if( i == 0 )
-    {
-        printf("Nenhum contato cadastrado...");
-    }
-
-    else
-    {
-    
-        for(int j = 1; j <= i; j++)
-        {
-            printf("Nome: %s", contatos[j].nome);
-    
-            printf("Email: %s", contatos[j].email);
-            
-            switch (contatos[j].tpC)
-            {
-                case Comercial:
-                    
-                    printf("Tipo de contato: Comercial\nTelefone: %s", contatos[j].telefone);
-
-                    break;
-
-                case Fixo:
-                    
-                    printf("Tipo de contato: Fixo\nTelefone: %s", contatos[j].telefone);
-
-                    break;
-
-                case Pessoal:
-                    
-                    printf("Tipo de contato: Pessoal\nTelefone: %s", contatos[j].telefone);
-
-                    break;
-
-                case Fax:
-                    
-                    printf("Tipo de contato: Fax\nTelefone: %s", contatos[j].telefone);
-
-                    break;
-
-                case Personalizado:
-                    
-                    printf("Tipo de contato: %s\nTelefone: %s", contatos[j].contatoPersonalizado, contatos[j].telefone);
-
-                    break;    
-                
-            }
-
-            switch (contatos[j].tpE)
-            {
-                case Alameda:
-                    
-                    printf("Alameda %s, %i, %s", contatos[j].endereco, contatos[j].numero, contatos[j].bairro);
-
-                    break;
-                
-                case Avenida:
-                    
-                    printf("Avenida %s, %i, %s", contatos[j].endereco, contatos[j].numero, contatos[j].bairro);
-
-                    break;
-
-                case Rua:
-                    
-                    printf("Rua %s, %i, %s", contatos[j].endereco, contatos[j].numero, contatos[j].bairro);
-
-                    break;
-
-                case Travessa:
-                    
-                    printf("Travessa %s, %i, %s", contatos[j].endereco, contatos[j].numero, contatos[j].bairro);
-
-                    break;
-                
-                case Praca:
-                    
-                    printf("Praca %s, %i, %s", contatos[j].endereco, contatos[j].numero, contatos[j].bairro);
-
-                    break;
-            }
-
-            switch (contatos[j].tpR)
-            {
-                case Instagram:
-                    printf("Instagram: %s", contatos[j].redeSocial);
-                    break;
-                
-                case Facebook:
-                    printf("Facebook: %s", contatos[j].redeSocial);
-                    break;
-                
-                case Twitter:
-                    printf("Twitter: %s", contatos[j].redeSocial);
-                    break;
-                
-                case Linkedin:
-                    printf("Linkedin: %s", contatos[j].redeSocial);
-                    break;
-                
-                case Outros:
-                    printf("%s: %s", contatos[j].redeSocialPersonalizada, contatos[j].redeSocial);
-                    break;
-            }
- 
-        }
-
-    }
-    
 
 }
-*/
+char *obterNomeEndereco (enum tipoEndereco tpE)
+{
+    const char *nomeEndereco[] =
+    {
+        "Alameda", "Avenida", "Praça", "Rodovia", "Rua", "Travessa"
+    };
+
+    return ( nomeEndereco [tpE] );
+}
