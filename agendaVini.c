@@ -10,34 +10,41 @@
 typedef struct registro
 {
     char nome [100] ;
-    enum tipo_endereco {Alameda, Avenida, Praca, Rua, Travessa} tendereco;
+    int tendereco;
     char endereco [100];
     int numero;
-    enum tipo_contato {celular, comercial, fixo, pessoal, fax, personalizado};
-    char telefone [12];
+    int tcontato;
+    char contato [12];
     char email [100];
+    int trede;
     char redes_sociais1 [100];
-    enum tipo_redessociais {Instagram, Facebook, Linkedin, Outros};
-    
 
 }VRegistro;
+
+enum tipo_endereco {Alameda, Avenida, Praca, Rua, Travessa} tendereco;
+enum tipo_contato {celular, comercial, fixo, pessoal, fax, personalizado} tcontato;
+enum tipo_redessociais {Instagram, Facebook, Linkedin, Outros} trede;
+
+
+// DECLARANDO SUB-ROTINAS
 int AdicionarContato (VRegistro registro[], int i);
 
-
+//FUNÇÃO PRINCIPAL
 int main (int argc, char*argv ){
-
+setlocale (LC_ALL,""); 
+system ("color 8F");
 
 // DECLARANDO VARIAVEIS E VETORES
-setlocale (LC_ALL,""); 
+
 VRegistro registro [3];
-int opcao, i=0;
+int opcao=0, i=0;
 const char *nomesTipoEndereco[] = { "Alameda", "Avenida", "Pra�a", "Rua", "Travessa" };
 char nomeArquivo [ TAM_MAX_NOME_ARQUIVO ];
 
 
 //PONTEIRO PARA REGISTRO
 FILE *ptrArquivo = NULL;
-ptrArquivo = fopen ( "registro.txt", "w" );
+ptrArquivo = fopen ( "registro.txt", "r" );
 
 
 //TESTE DE FUNCIONALIDADE
@@ -53,28 +60,7 @@ char dados [ TAM_MAX_DADOS ];
 int  contMsg = 1;
 int  tamMsg = 0;
 
-/*do
-    {
-        strcpy ( dados, "" );
-        printf ( "Msg. %02i: ", contMsg++ );
-        fflush ( stdin );
-        scanf  ( "%[^\n]s", dados );
 
-        tamMsg = strlen ( dados );
-        if ( tamMsg > 0 )
-        {
-            fprintf ( ptrArquivo, "%s\n", dados );
-        }
-    } while ( tamMsg > 0 );
-
-printf ( "\nVoc� teclou <ENTER> com mensagem vazia, finalizando...\n" );
-printf ( "Fechando o arquivo: %s.\n", nomeArquivo );
-
-fclose ( ptrArquivo );
-ptrArquivo = NULL;*/
-
-do
-{
 //MENU DA AGENDA
 printf ("\n\t ######## AGENDA ######## \n");
 printf ("\t -- ESCOLHA UMA OPCAO -- \n\n");
@@ -91,34 +77,50 @@ scanf ("%d", &opcao);
         {
         case(1):
             i = AdicionarContato(registro, i); 
+            printf("%d",i);
             break;
 
         default:
             break;
         }
-    }
-while (i++);
 
     return 0;
 }
+
+
 int AdicionarContato (VRegistro registro[], int i){
 
-    printf("\nPREENCHA OS CAMPOS A SEGUIR: \n");
-    printf("\nNome:");
+    printf("\n\tPREENCHA OS CAMPOS A SEGUIR: \n");
+    printf("\n\tNome:");
     fflush(stdin);
-    scanf("%s",registro[i].nome);
-    printf("\nEndereco:");
+    scanf("%s",&registro[i].nome);
+    printf("\n\tTipo de endereco: \n\t( 0 )-Alameda \n\t( 1 )-Avenida \n\t( 2 )-Praca \n\t( 3 )-Rua \n\t( 4 )-Travessa");
+    printf("\n\tOpcao: ");
     fflush(stdin);
-    scanf("%s",registro[i].endereco);
-    printf("\nNumero:");
+    scanf("%s",&registro[i].tendereco);
+    printf("\n\tEndereco:");
     fflush(stdin);
-    scanf("%s",registro[i].numero);
-    printf("\nEmail:");
+    scanf("%s",&registro[i].endereco);
+    printf("\n\tNumero:");
     fflush(stdin);
-    scanf("%s",registro[i].email);
-    printf("\nRede Social:");
+    scanf("%s",&registro[i].numero);
+    printf("\n\tTipo de contato: \n\t( 0 )-Celular \n\t( 1 )-Comercial \n\t( 2 )-Fixo \n\t( 3 )-Pessoal \n\t( 4 )-Fax \n\t( 5 )-Personalizado");
+    printf("\n\tOpcao: ");
     fflush(stdin);
-    scanf("%s",registro[i].redes_sociais1);
+    scanf("%s",&registro[i].tcontato);
+    printf("\n\tTelefone para contato:");
+    fflush(stdin);
+    scanf("%s",&registro[i].contato);
+    printf("\n\tEmail:");
+    fflush(stdin);
+    scanf("%s",&registro[i].email);
+    printf("\n\tTipo de rede social: \n\t( 0 )-Instagram \n\t( 1 )-Facebook \n\t( 2 )-Linkedin \n\t( 3 )-Outros");
+    printf("\n\tOpcao: ");
+    fflush(stdin);
+    scanf("%s",&registro[i].trede);
+    printf("\n\tRede Social:");
+    fflush(stdin);
+    scanf("%s",&registro[i].redes_sociais1);
 
-    return i++;
+    return i=i+1;
 }
