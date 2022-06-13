@@ -33,28 +33,37 @@ contatos max[MAX];      // agora max[100] é um vetor do tipo contatos definido 
 FILE *arq;              // ponteiro 
 
 // DECLARANDO SUB-ROTINAS
+void Menu();
 void AdicionarContato (void);
 char AdicionarOutro ();
-
+void AlterarContato ();
 
 //FUNÇÃO PRINCIPAL
 int main (){
 setlocale (LC_ALL,""); 
 system ("color 8F");
 
-
-//DECLARANDO VARIAVEIS E VETORES
-int op=0;
-
 /*const char *nomesTipoEndereco[] = { "Alameda", "Avenida", "Pra�a", "Rua", "Travessa" };
 char nomeArquivo [ MAX ];   
 */
 
 //VARIAVEIS QUE SERAO REGISTRADA DENTRO DO ARQUIVO
-char dados [ DADOS];
+
 int  contMsg = 1;
 int  tamMsg = 0;
 
+Menu();
+
+
+    return 0;
+}
+
+void Menu (){
+
+system("cls");
+
+//DECLARANDO VARIAVEIS E VETORES
+int op=0;
 
 //MENU DA AGENDA
 printf ("\n\t ######## AGENDA ######## \n");
@@ -73,24 +82,35 @@ scanf ("%d", &op);
         case(1):
             system("cls");
             AdicionarContato(); 
+            Menu();
+            break;
         
+        case(2):
+            system("cls");
+            AlterarContato(); 
+            Menu();
             break;
 
+        case(6):
+        system("cls");
+        printf("Encerrando...");
+        exit(1);
+
         default:
+        printf("\n Operacao INVALIDA!");
             break;
         }
 
-    return 0;
 }
-
 
 void AdicionarContato (void){
 
+    char dados [ DADOS];
     int cont = 0;   //contador
     int retorno;    //retorno seve para definir se fwrite funcionou
     char opcao = 's';  //opcao para saber se vai AddMais()
 
-    arq = fopen("agenda.txt", "a"); //Abrindo/ criando arquivo se ele não existir 
+    arq = fopen("agenda.csv", "a"); //Abrindo/ criando arquivo se ele não existir 
 
 
     if(arq == NULL){                             // Teste para ver se o arquivo abriu corretamente
@@ -110,9 +130,9 @@ void AdicionarContato (void){
         fflush(stdin);
         gets(max[cont].nome);
         
-        printf("\n\tTipo de endereco: \n\t( 0 )-Alameda \n\t( 1 )-Avenida \n\t( 2 )-Praca \n\t( 3 )-Rua \n\t( 4 )-Travessa \n Opcao: ");
+        printf("\n\tTipo de endereco: \n\t( 0 )-Alameda \n\t( 1 )-Avenida \n\t( 2 )-Praca \n\t( 3 )-Rua \n\t( 4 )-Travessa \n\t Opcao: ");
         fflush(stdin);
-        gets(max[cont].tendereco);
+        gets(&max[cont].tendereco);
         
         printf("\n\tEndereco:");
         fflush(stdin);
@@ -120,13 +140,13 @@ void AdicionarContato (void){
         
         printf("\n\tNumero:");
         fflush(stdin);
-        gets(max[cont].numero);
+        gets(&max[cont].numero);
         
         printf("\n\tTipo de contato: \n\t( 0 )-Celular \n\t( 1 )-Comercial \n\t( 2 )-Fixo \n\t( 3 )-Pessoal \n\t( 4 )-Fax \n\t( 5 )-Personalizado");
         
         printf("\n\tOpcao: ");
         fflush(stdin);
-        gets(max[cont].tcontato);
+        gets(&max[cont].tcontato);
         
         printf("\n\tTelefone para contato:");
         fflush(stdin);
@@ -140,7 +160,7 @@ void AdicionarContato (void){
         
         printf("\n\tOpcao: ");
         fflush(stdin);
-        gets(max[cont].trede);
+        gets(&max[cont].trede);
         
         printf("\n\tRede Social:");
         fflush(stdin);
@@ -150,13 +170,13 @@ void AdicionarContato (void){
     retorno = fwrite (&max[cont], sizeof(contatos) ,1,arq);
 
     if (retorno == 1) {
-               printf("\n Gravacao ok! ");
+               printf("\n");
            }
-           cont++;                      //enquanto cont for menor que o tamanho definido adiciona mais um contato
+           cont++;                         //enquanto cont for menor que o tamanho definido adiciona mais um contato
            opcao = AdicionarOutro();      //chama a função que pergunta se deseja inserir outros contatos
-           qtd++;                     //acrecenta 1 contato a mais a variavel global
+           qtd++;                        //acrecenta 1 contato a mais a variavel global
      }
-     fclose (arq);//fecha o arquivo agenda.txt
+     fclose (arq);  //fecha o arquivo agenda.txt
 
 }
 
@@ -171,5 +191,10 @@ do {
 } while (opcao != 's' && opcao != 'n');
 
     return opcao;
+
+}
+
+void AlterarContato (){
+
 
 }
