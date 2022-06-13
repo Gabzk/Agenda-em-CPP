@@ -124,9 +124,11 @@ void QntContatos(Agenda **c, int quant)
         printf("\t%d = aniversário: %2d de %s\t nome do contato: %s \t telefone: %s\t tipo de contato: %s\n ",
             i + 1, c[i]->bd, c[i]->bdm, c[i]->nome, c[i]->telefone,c[i]->tpctt, c[i]->email,
              c[i]->redesocial, c[i]->tprd, c[i]->tpEnd, c[i]->endereco, c[i]->bairro, c[i]->numero, c[i]->cep, c[i]->complemento );
-             //refazer comando acima
+             //refazer comando acima  
+             \\o problema é que não está reconhecendo os enums e dá erro na exibição, agora refiz sem os enums
 */
-        printf("\t%d = aniversário: %2d.\n", i + 1, c[i]->bd);
+        printf("\t%d = nome do contato: %s \t  aniversário: %2d de %s\t telefone: %s\n email: %s\t usuario: %s\n endereco: %s\t bairro: %s\t  ",
+            i + 1, c[i]->nome, c[i]->bd, c[i]->bdm, c[i]->telefone, c[i]->email, c[i]->redesocial, c[i]->endereco, c[i]->bairro);
     }
 }
 
