@@ -37,6 +37,7 @@ typedef struct ficha
 
 FILE *agenda = NULL;
 cadastro contatos[TAM_MAX_CONTATOS];
+int nContatos;
 
 
 
@@ -56,13 +57,12 @@ int main()
     return 0;
 }
 
-
 void menu(void)
 {   
     char opcao; // Variável de opção
 
     // Laço do menu do programa 
-    while (opcao != 6)
+    while (opcao != '6')
     {
         system("cls");
         printf("\tAGENDA TELEFONICA\n"        );
@@ -100,8 +100,7 @@ void menu(void)
 
             case '6':
                 system("cls");
-                printf("Programa Encerrado");
-                fclose(agenda);
+                printf("\tPrograma Encerrado...\n");
             break;
             
             default:
@@ -114,7 +113,7 @@ void menu(void)
 
 void adicionar(void)
 {
-    int nContatos = 0, gravar;
+    int gravar;
     char op = 's';
 
     agenda = fopen("agenda.csv", "a");
@@ -198,8 +197,7 @@ void adicionar(void)
         }
         
         fclose(agenda);
-        getchar();
-        printf("\nPressione Enter para continuar");
+        
 }
 
 
@@ -218,7 +216,7 @@ char continuar()
 
 
 void listar(void)
-{
+{   
     int i = 0, ler;
 
     agenda = fopen("agenda.csv", "r");
@@ -249,13 +247,43 @@ void listar(void)
     getch();
 }
 
-
-char *obterNomeEndereco (enum tipoEndereco tpE)
+void organizar(void)
 {
-    const char *nomeEndereco[] =
-    {
-        "Alameda", "Avenida", "Praça", "Rodovia", "Rua", "Travessa"
-    };
+    // Abertura do Arquivo para ordenação
+    agenda = fopen("agenda.csv", "w");
 
-    return ( nomeEndereco [tpE] );
+    // Variáveis auxiliares para ordenação
+    cadastro contatoAuxiliar;
+    int aux, i, j, k, ordenar;
+    char *str, *str2;
+
+    // Variável de contagem
+    aux = nContatos;
+
+    // Laço de ordenação
+    for(i = 0; i < aux; i++)
+    {
+        str = contatos[i].nome;
+        
+        for(j = i + 1; j < aux; j++)
+        {
+            str2 = contatos[j].nome;
+            if ( strcmp (str, str2) > 0)
+            {
+                contatoAuxiliar = contatos[i];
+                contatos[i] = contatos[j];
+                contatos[j] = contatoAuxiliar;
+            }
+        }
+    }
+    
+    do
+    {
+        ordenar = fwrite(&contatos, sizeof(cadastro), 1, agenda);
+
+    } while (ordenar == 1);
+    
+        
+    agenda = fclose("agenda.txt");
+
 }
