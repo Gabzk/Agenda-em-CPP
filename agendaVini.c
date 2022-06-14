@@ -23,7 +23,7 @@ typedef struct registro
 
 }contatos;
 
-enum tipo_endereco {Alameda, Avenida, Praca, Rua, Travessa} tendereco;
+//enum tipo_endereco {Alameda, Avenida, Praca, Rua, Travessa} tendereco;
 enum tipo_contato {celular, comercial, fixo, pessoal, fax, personalizado} tcontato;
 enum tipo_redessociais {Instagram, Facebook, Linkedin, Outros} trede;
 
@@ -107,7 +107,7 @@ scanf ("%d", &op);
 
         case(6):
         system("cls");
-        printf("Encerrando...");
+        printf("\n\t Encerrando...\n");
         exit(1);
 
         default:
@@ -231,8 +231,8 @@ save = fread(&max[i], sizeof(contatos), 1, arq);
 while (save == 1)
 {
     printf("\n\t Nome: %s", max[i].nome);
-    printf("\n\t Tipo de endereco: %s",nomesTipoEndereco[i]);
-
+    printf("\n\t Endereco: %s %s",nomesTipoEndereco[i],max[i].endereco);
+    printf("\n\t Numero: %s",&max[i].numero);
 
 
 
