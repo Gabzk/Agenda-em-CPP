@@ -32,11 +32,14 @@ static int qtd = 0;     // qtd é uma variavel do tipo estatica que conta a quan
 contatos max[MAX];      // agora max[100] é um vetor do tipo contatos definido com o typedef
 FILE *arq;              // ponteiro 
 
+
 // DECLARANDO SUB-ROTINAS
 void Menu();
 void AdicionarContato (void);
 char AdicionarOutro ();
 void AlterarContato ();
+void ListarContatos ();
+
 
 //FUNÇÃO PRINCIPAL
 int main (){
@@ -61,6 +64,7 @@ Menu();
 void Menu (){
 
 system("cls");
+
 
 //DECLARANDO VARIAVEIS E VETORES
 int op=0;
@@ -87,8 +91,13 @@ scanf ("%d", &op);
         
         case(2):
             system("cls");
-            AlterarContato(); 
-            Menu();
+            AlterarContato();
+            Menu(); 
+            break;
+
+        case(5):
+            system("cls");
+            ListarContatos(); 
             break;
 
         case(6):
@@ -107,7 +116,7 @@ void AdicionarContato (void){
 
     char dados [ DADOS];
     int cont = 0;   //contador
-    int retorno;    //retorno seve para definir se fwrite funcionou
+    int save;    //retorno seve para definir se fwrite funcionou
     char opcao = 's';  //opcao para saber se vai AddMais()
 
     arq = fopen("agenda.csv", "a"); //Abrindo/ criando arquivo se ele não existir 
@@ -167,9 +176,9 @@ void AdicionarContato (void){
         gets(max[cont].redes_sociais1);
 
 
-    retorno = fwrite (&max[cont], sizeof(contatos) ,1,arq);
+    save = fwrite (&max[cont], sizeof(contatos) ,1,arq);
 
-    if (retorno == 1) {
+    if (save == 1) {
                printf("\n");
            }
            cont++;                         //enquanto cont for menor que o tamanho definido adiciona mais um contato
@@ -197,4 +206,41 @@ do {
 void AlterarContato (){
 
 
+}
+
+void ListarContatos (){
+
+int i = 0, save;
+
+arq = fopen("agenda.csv", "r"); //Abrindo o arquivo apenas para leitura 
+
+
+    if(arq == NULL){                             // Teste para ver se o arquivo abriu corretamente
+        printf("Erro ao abrir o arquivo!");     // Mensagem exibida se o arquivo der erro
+        getchar();                             // Eseprando resposta do usario para sair do programa
+        exit(1);
+    }
+save = fread(&max[i], sizeof(contatos), 1, arq);
+
+while (save == 1)
+{
+    printf("\n\t Nome: %s", max[i].nome);
+    printf("\n\t Tipo de endereco: %s",&max[i].tendereco);
+
+
+
+
+
+
+
+    i++;
+    save = fread(&max[i], sizeof(contatos), 1, arq);  //fread vai ler o proximo contato
+}
+
+
+
+
+
+
+     fclose (arq);  //fecha o arquivo agenda.txt
 }
