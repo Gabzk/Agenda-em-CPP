@@ -41,14 +41,16 @@ void AlterarContato ();
 void ListarContatos ();
 
 
+const char *nomesTipoEndereco[] = { "Alameda", "Avenida", "Praca", "Rua", "Travessa" };
+
 //FUNÇÃO PRINCIPAL
 int main (){
 setlocale (LC_ALL,""); 
 system ("color 8F");
 
-/*const char *nomesTipoEndereco[] = { "Alameda", "Avenida", "Pra�a", "Rua", "Travessa" };
+
 char nomeArquivo [ MAX ];   
-*/
+
 
 //VARIAVEIS QUE SERAO REGISTRADA DENTRO DO ARQUIVO
 
@@ -97,7 +99,10 @@ scanf ("%d", &op);
 
         case(5):
             system("cls");
-            ListarContatos(); 
+            ListarContatos();
+            printf("\n\n"); 
+            system("pause");
+            Menu();
             break;
 
         case(6):
@@ -222,10 +227,11 @@ arq = fopen("agenda.csv", "r"); //Abrindo o arquivo apenas para leitura
     }
 save = fread(&max[i], sizeof(contatos), 1, arq);
 
+
 while (save == 1)
 {
     printf("\n\t Nome: %s", max[i].nome);
-    printf("\n\t Tipo de endereco: %s",&max[i].tendereco);
+    printf("\n\t Tipo de endereco: %s",nomesTipoEndereco[i]);
 
 
 
@@ -242,5 +248,5 @@ while (save == 1)
 
 
 
-     fclose (arq);  //fecha o arquivo agenda.txt
+     fclose (arq);  //fecha o arquivo agenda.csv
 }
