@@ -1,7 +1,9 @@
+// Pré-declaração das variáveis
 char *obterNomeContato ( enum tipoContato tpC );
 char *obterNomeEndereco ( enum tipoEndereco tpEnd);
 char *obterNomeRede ( enum tipoRede tpR );
 
+//Subrotinas pra transformar enum em string
 char *obterNomeContato ( enum tipoContato tpC )
 {
     const char *nomeContato[] =
