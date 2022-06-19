@@ -5,8 +5,11 @@
 #include <ctype.h>      
 #include <locale.h>
 
-#define MAX 100
+#define MAX 250
 #define DADOS 200
+#define agenda "Agenda.csv"
+
+
 
 //TIPO DE VARIAVEL DO REGISTRO
 typedef struct registro
@@ -23,53 +26,35 @@ typedef struct registro
 
 }contatos;
 
-//enum tipo_endereco {Alameda, Avenida, Praca, Rua, Travessa} tendereco;
-enum tipo_contato {celular, comercial, fixo, pessoal, fax, personalizado} tcontato;
-enum tipo_redessociais {Instagram, Facebook, Linkedin, Outros} trede;
 
-// VARIÁVEIS GLOBAIS
-static int qtd = 0;     // qtd é uma variavel do tipo estatica que conta a quantidade de contatos incritos
-contatos max[MAX];      // agora max[100] é um vetor do tipo contatos definido com o typedef
-FILE *arq;              // ponteiro 
-
-
-// DECLARANDO SUB-ROTINAS
-void Menu();
-void AdicionarContato (void);
-char AdicionarOutro ();
-void AlterarContato ();
-void ListarContatos ();
+//SUB-ROTINAS
+void criarContato();
+void inserirContato(contatos contato);
+void salvarContato(contatos contato, FILE *arq);
+void carregarAgenda();
+void mostrarContato(int i);
+void listarContatos();
+int compararLetras();
+void procurarContato();
+void editarContato ();
+void deletarContato();
 
 
-const char *nomesTipoEndereco[] = { "Alameda", "Avenida", "Praca", "Rua", "Travessa" };
-
-//FUNÇÃO PRINCIPAL
-int main (){
-setlocale (LC_ALL,""); 
-system ("color 8F");
+static int qtd = 0;     // variavel que conta a quantidade de contatos incritos
+contatos vetorContatos[MAX];
 
 
-char nomeArquivo [ MAX ];   
+int main(void){
 
-
-//VARIAVEIS QUE SERAO REGISTRADA DENTRO DO ARQUIVO
-
-int  contMsg = 1;
-int  tamMsg = 0;
-
-Menu();
-
-
-    return 0;
-}
-
-void Menu (){
+carregarAgenda();
 
 system("cls");
+system("COLOR 8F");
 
-
-//DECLARANDO VARIAVEIS E VETORES
 int op=0;
+
+do{
+system("cls");
 
 //MENU DA AGENDA
 printf ("\n\t ######## AGENDA ######## \n");
@@ -83,170 +68,278 @@ printf ("\t 6 - SAIR \n");
 printf("\n Opcao: ");
 scanf ("%d", &op);
 
-    switch (op)
-        {
-        case(1):
+        switch (op)
+            {
+            case(1):
             system("cls");
-            AdicionarContato(); 
-            Menu();
+            fflush(stdin);
+            criarContato();
             break;
         
-        case(2):
+            case(2):
             system("cls");
-            AlterarContato();
-            Menu(); 
+            fflush(stdin);
+            editarContato();
+
             break;
 
-        case(5):
+            case(3):
             system("cls");
-            ListarContatos();
-            printf("\n\n"); 
-            system("pause");
-            Menu();
+            fflush(stdin);
+            procurarContato(); 
             break;
 
-        case(6):
-        system("cls");
-        printf("\n\t Encerrando...\n");
-        exit(1);
+            case(4):
+            system("cls");
+            fflush(stdin);
+            deletarContato(); 
+            break;
 
-        default:
-        printf("\n Operacao INVALIDA!");
+            case(5):
+            system("cls");
+            fflush(stdin);
+            carregarAgenda();
+            listarContatos(); 
+            break;
+
+            case(6):
+            system("cls");
+            printf("\n\t Encerrando...");
+            exit(1);
+
+            default:
+            printf("\n Operacao INVALIDA!");
             break;
         }
-
+    }
+    while(op);
+    return 0;
 }
 
-void AdicionarContato (void){
+void carregarAgenda (){
 
-    char dados [ DADOS];
-    int cont = 0;   //contador
-    int save;    //retorno seve para definir se fwrite funcionou
-    char opcao = 's';  //opcao para saber se vai AddMais()
+    FILE *arq = fopen(agenda, "r");
 
-    arq = fopen("agenda.csv", "a"); //Abrindo/ criando arquivo se ele não existir 
+    qtd = 0;
+	
+	if(!arq == NULL){
+		rewind(arq);			
+		
+		while(!feof(arq)){      //feof diz quando o arquivo chega ao fim.
+			fgets(vetorContatos[qtd].nome, 50, arq);
+			if(strcmp(vetorContatos[qtd].nome, "") > 0){ 
+				fgets(&vetorContatos[qtd].tendereco, 10, arq);
+				fgets(vetorContatos[qtd].endereco, 50, arq);
+                fgets(&vetorContatos[qtd].numero, 20, arq);
+                fgets(&vetorContatos[qtd].tcontato, 10, arq);
+                fgets(vetorContatos[qtd].contato, 50, arq);
+                fgets(vetorContatos[qtd].email, 50, arq);
+                fgets(&vetorContatos[qtd].trede, 10, arq);
+                fgets(vetorContatos[qtd].redes_sociais1, 50, arq);
+				qtd++;
+                
+			}
+		}		
+	}
+    else{
+		printf("ERRO ao carregar agenda!.\n");
+	}
 
+    fclose(arq);
+}
 
-    if(arq == NULL){                             // Teste para ver se o arquivo abriu corretamente
-        printf("Erro ao abrir o arquivo!");     // Mensagem exibida se o arquivo der erro
-        getchar();                             // Eseprando resposta do usario para sair do programa
-        exit(1);
-    }
+void criarContato (){
 
+contatos contato;
 
-
-    while ((cont < MAX) && (opcao == 's'))
-    {
+    if(qtd < MAX){
 
         printf("\n\tPREENCHA OS CAMPOS A SEGUIR: \n");
         
         printf("\n\tNome:");
         fflush(stdin);
-        gets(max[cont].nome);
+        fgets(contato.nome,50,stdin);
         
         printf("\n\tTipo de endereco: \n\t( 0 )-Alameda \n\t( 1 )-Avenida \n\t( 2 )-Praca \n\t( 3 )-Rua \n\t( 4 )-Travessa \n\t Opcao: ");
         fflush(stdin);
-        gets(&max[cont].tendereco);
+        scanf("%i",&contato.tendereco);
         
         printf("\n\tEndereco:");
         fflush(stdin);
-        gets(max[cont].endereco);
-        
+        fgets(contato.endereco,50,stdin);
+
         printf("\n\tNumero:");
         fflush(stdin);
-        gets(&max[cont].numero);
+        scanf("%i",&contato.numero);
         
         printf("\n\tTipo de contato: \n\t( 0 )-Celular \n\t( 1 )-Comercial \n\t( 2 )-Fixo \n\t( 3 )-Pessoal \n\t( 4 )-Fax \n\t( 5 )-Personalizado");
         
         printf("\n\tOpcao: ");
         fflush(stdin);
-        gets(&max[cont].tcontato);
+        scanf("%i",&contato.tcontato);
         
         printf("\n\tTelefone para contato:");
         fflush(stdin);
-        gets(max[cont].contato);
+        fgets(contato.contato,12,stdin);
         
         printf("\n\tEmail:");
         fflush(stdin);
-        gets(max[cont].email);
+        fgets(contato.email,50,stdin);
         
         printf("\n\tTipo de rede social: \n\t( 0 )-Instagram \n\t( 1 )-Facebook \n\t( 2 )-Linkedin \n\t( 3 )-Outros");
         
         printf("\n\tOpcao: ");
         fflush(stdin);
-        gets(&max[cont].trede);
+        scanf("%i",&contato.trede);
         
         printf("\n\tRede Social:");
         fflush(stdin);
-        gets(max[cont].redes_sociais1);
+        fgets(contato.redes_sociais1,50,stdin);
 
-
-    save = fwrite (&max[cont], sizeof(contatos) ,1,arq);
-
-    if (save == 1) {
-               printf("\n");
-           }
-           cont++;                         //enquanto cont for menor que o tamanho definido adiciona mais um contato
-           opcao = AdicionarOutro();      //chama a função que pergunta se deseja inserir outros contatos
-           qtd++;                        //acrecenta 1 contato a mais a variavel global
-     }
-     fclose (arq);  //fecha o arquivo agenda.txt
-
+    inserirContato(contato);
+    }else{
+    printf("\n\t Memoria insuficiente! ");
+}
 }
 
-char AdicionarOutro (){
+void inserirContato(contatos contato){
 
-char opcao;    
-
-do {
-    printf ("\n Deseja adicionar outro contato? s/n");
-    opcao = getchar();
-    printf("\n");
-} while (opcao != 's' && opcao != 'n');
-
-    return opcao;
-
-}
-
-void AlterarContato (){
-
-
-}
-
-void ListarContatos (){
-
-int i = 0, save;
-
-arq = fopen("agenda.csv", "r"); //Abrindo o arquivo apenas para leitura 
-
-
-    if(arq == NULL){                             // Teste para ver se o arquivo abriu corretamente
+    FILE *arq = fopen (agenda, "a+");
+	
+	if(arq == NULL){                             // Teste para ver se o arquivo abriu corretamente
         printf("Erro ao abrir o arquivo!");     // Mensagem exibida se o arquivo der erro
         getchar();                             // Eseprando resposta do usario para sair do programa
         exit(1);
     }
-save = fread(&max[i], sizeof(contatos), 1, arq);
+    else{
+		salvarContato(contato, arq);
+		vetorContatos[qtd] = contato;
+		qtd++;
+	}
+    
+	fclose(arq);
+	
 
-
-while (save == 1)
-{
-    printf("\n\t Nome: %s", max[i].nome);
-    printf("\n\t Endereco: %s %s",nomesTipoEndereco[i],max[i].endereco);
-    printf("\n\t Numero: %s",&max[i].numero);
-
-
-
-
-
-
-    i++;
-    save = fread(&max[i], sizeof(contatos), 1, arq);  //fread vai ler o proximo contato
 }
 
+void salvarContato(contatos contato, FILE *arq){
 
+    fprintf(arq,contato.nome);
+    fprintf(arq,"%i\n",contato.tendereco);
+    fprintf(arq,contato.endereco);
+    fprintf(arq,"%i\n",contato.numero);
+    fprintf(arq,"%i\n",contato.tcontato);
+    fprintf(arq,contato.contato);
+    fprintf(arq,contato.email);
+    fprintf(arq,"%i\n",contato.trede);
+    fprintf(arq,contato.redes_sociais1);
 
+}
 
+void mostrarContato(int i){
+	
+    printf("\n\t CONTATO: %i", i+1);
 
+	printf("\n\n\t Nome: %s", vetorContatos[i].nome);
+	printf("\t Tipo de endereco: %s", &vetorContatos[i].tendereco);
+	printf("\t Endereco: %s", vetorContatos[i].endereco);
+    printf("\t Numero: %s", &vetorContatos[i].numero);
+    printf("\t Tipo de contato: %s", &vetorContatos[i].tcontato);
+    printf("\t Contato: %s", vetorContatos[i].contato);
+    printf("\t Email: %s", vetorContatos[i].email);
+    printf("\t Tipo de rede: %s", &vetorContatos[i].trede);
+    printf("\t Rede social: %s", vetorContatos[i].redes_sociais1);
 
-     fclose (arq);  //fecha o arquivo agenda.csv
+}
+
+void listarContatos(){
+    
+	printf("\n\t LISTA DE CONTATOS\n");
+	
+	for(int i=0; i<qtd; i++){
+		mostrarContato(i);
+		printf("\t -------- PAGINA %i--------- \n", i);
+        system("pause");
+	}
+	
+}
+
+int compararLetras(char *a, char *b, int i, int limite){
+
+    if(a[i] == b[i]){
+        i++;
+        if(i < limite){
+            return compararLetras(a, b, i, limite);
+        }else{
+            return 1;
+        }
+    }else{
+        return 0;
+    }
+
+}
+
+void procurarContato(){
+
+    char nome[51] = {""};
+    
+
+    printf("\n\t -- PROCURAR CONTATO -- \n");
+    printf("\n\t Digite o nome do contato a ser procurado: ");
+    fgets(nome, 50, stdin);
+    fflush(stdin);
+
+    int limite = strlen(nome);
+    limite --;
+
+    system("cls");
+    printf("\n\t RESULTADO: \n");
+
+    for(int i = 0; i < qtd; i++){
+        if(strlen (vetorContatos[i].nome) >= limite){
+            if(compararLetras(nome, vetorContatos[i].nome, 0, limite) == 1){
+                
+                mostrarContato(i);
+                printf("\n\t -------------------- \n");
+                system("pause");
+            }
+        }
+    }
+}
+
+void editarContato (){
+
+    int selecionado = -1, op = 0;   // o -1 serve para desfazer a formatacao de exibicao em mostrarContatos 
+
+    printf("\n\t Digite numero (id) do contato: ");
+    scanf("%i", &selecionado);
+
+    if(selecionado > 0){
+        if(selecionado <= MAX){
+            selecionado --;
+            printf("\n\t Contato selecionado: %s \n", vetorContatos[selecionado].nome);
+            system("pause");
+        }else{
+            printf("\n\t Esse contato nao existe!");
+        }
+    }
+
+}
+
+void deletarContato (){
+
+    int selecionado = -1, op = 0;   // o -1 serve para desfazer a formatacao de exibicao em mostrarContatos 
+
+    printf("\n\t Digite numero (id) do contato: ");
+    scanf("%i", &selecionado);
+
+    if(selecionado > 0){
+        if(selecionado <= MAX){
+            selecionado --;
+            printf("\n\t Contato selecionado: %s \n", vetorContatos[selecionado].nome);
+            system("pause");
+        }else{
+            printf("\n\t Esse contato nao existe!");
+        }
+    }
 }
