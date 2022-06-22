@@ -5,6 +5,7 @@
 #include <ctype.h>
 
 #define TAM_MAX_CONTATOS 500
+#define agenda "agenda.csv"
 
 // Criação de enumeradores para tipos
 enum tipoContato  {Comercial = 0, Fixo, Pessoal, Fax, Personalizado};
@@ -12,7 +13,7 @@ enum tipoRede     {Instagram = 0, Facebook, Twitter, Linkedin, Outros};
 enum tipoEndereco {Alameda = 0, Avenida, Praca, Rua, Travessa};
 
 // Definição de registro de contato
-typedef struct agenda
+typedef struct ficha
 {  
     char    nome[50];
     char    email[50];
@@ -20,37 +21,43 @@ typedef struct agenda
     char    endereco[50];
     char    bairro[30];
     char    redeSocial[30];
-    int     numero;
+    char    numero[10];
+    
     enum    tipoContato tpC;
+    char    tpContato[15];
     enum    tipoEndereco tpEnd;
+    char    tpEndereco[15];
     enum    tipoRede tpR;
+    char    tpRede[15];
+
 } tipoCadastro;
 
-//Declaração prévia das sub-rotinas
-void menu(void);
-void adicionar(void);
-void listar(void);
+//Sub-Rotinas
+void menu();
+void lerArquivo();
+void Incluir(void);
+void Listar(void);
+char continuar();
 char *obterNomeContato ( enum tipoContato tpC );
 char *obterNomeEndereco ( enum tipoEndereco tpEnd);
 char *obterNomeRede ( enum tipoRede tpR );
-char continuar(void);
 
-//Variáveis Globais
-FILE *ptrAgenda = NULL;
-tipoCadastro contato[TAM_MAX_CONTATOS];
-unsigned nContatos = 0;
+int qntd = 0;
+tipoCadastro pessoa[TAM_MAX_CONTATOS];
 
 int main()
 {
-    setlocale (LC_ALL , "" );
+    setlocale(LC_ALL, "");
+    lerArquivo();
     system("color 3");
     menu();
-
     return 0;
 }
 
-void menu(void)
+void menu()
 {   
+
+    
     char op; // Variável de opção
 
     // Laço do menu do programa 
@@ -65,12 +72,12 @@ void menu(void)
         printf("\n ( 5 ) LISTAR CONTATOS");
         printf("\n ( 6 ) SAIR\n");
 
-        op = tolower (getch()) ;
+        op = getch();
 
         switch (op)
         {
             case '1':
-                adicionar();
+                Incluir();
             break;
             
             case '2':
@@ -86,7 +93,8 @@ void menu(void)
             break;
 
             case '5':
-                listar();
+                system("cls");
+                Listar();
             break;
 
             case '6':
@@ -100,116 +108,132 @@ void menu(void)
             break;
         }
     }
-
 }
 
-void adicionar(void)
+/*========  Incluir Contatos na Agenda  ===========*/
+void Incluir(void)
 {
-    char op = 's';
+    FILE *ptrAgenda = NULL;
+    tipoCadastro pessoa;
+    char op = 's'; 
 
-    if(nContatos < TAM_MAX_CONTATOS)
+    ptrAgenda = fopen(agenda, "a");
+
+    if(qntd < TAM_MAX_CONTATOS)
     {
-        while(op == 's')
+        while (op == 's')
         {
-            system("cls");
+            system("cls"); // limpar tela
 
-            ptrAgenda = fopen("agenda.txt", "a");
-
-            if(ptrAgenda == NULL)
-            {
-                printf("Erro ao abrir arquivo. Finalizando Programa...");
-                exit(0);
-            }
-
-            printf("Nome: ");
+            
+            printf("\n\tDigite o nome: ");
+            scanf("%[^\n]s", pessoa.nome);
             fflush(stdin);
-            scanf("%[^\n]s", contato[nContatos].nome);
-
-            printf("Email: ");
+            
+            
+            printf("\n\tTipo de contatos:\n\t( 0 ) Comercial\n\t( 1 ) Fixo\n\t( 2 ) Pessoal\n\t( 3 ) Fax\n\t( 4 ) Personalizado\n\t Sua escolha:");
+            scanf("%i", &pessoa.tpC);
             fflush(stdin);
-            scanf("%[^\n]s", contato[nContatos].email);
+            strcpy(pessoa.tpContato, obterNomeContato(pessoa.tpC));
+            
 
-            printf("\nTipo de contatos:\n( 0 ) Comercial\n( 1 ) Fixo\n( 2 ) Pessoal\n( 3 ) Fax\n( 4 ) Personalizado\n Sua escolha:");
+            printf("\n\tDigite o telefone: ");
+            scanf("%[^\n]s", pessoa.telefone);
             fflush(stdin);
-            scanf("%i", &contato[nContatos].tpC );
+            
 
-            printf("\nDDD e Telefone: ");
+            printf("\n\tDigite o Email: ");
+            scanf("%[^\n]s", pessoa.email);
             fflush(stdin);
-            scanf("%[^\n]s", contato[nContatos].telefone);
+            
 
-            printf("\nTipo do endereço:\n( 0 ) Alameda\n( 1 ) Avenida\n( 2 ) Praca\n( 3 ) Rua\n( 4 ) Travessa\n Sua escolha:");
+            printf("\n\tTipo do endereço:\n\t( 0 ) Alameda\n\t( 1 ) Avenida\n\t( 2 ) Praca\n\t( 3 ) Rua\n\t( 4 ) Travessa\n\t Sua escolha:");
+            scanf("%i", &pessoa.tpEnd);
             fflush(stdin);
-            scanf("%i", &contato[nContatos].tpEnd);
+            strcpy(pessoa.tpEndereco, obterNomeEndereco(pessoa.tpEnd));
+            
 
-            printf("\nEndereço: ");
+            printf("\n\tDigite o Endereço: ");
+            scanf("%[^\n]s", pessoa.endereco);
             fflush(stdin);
-            scanf("%[^\n]s", contato[nContatos].endereco);
+            
 
-            printf("Numero: ");
+            printf("\n\tDigite o Número: ");
+            scanf("%[^\n]s", pessoa.numero);
             fflush(stdin);
-            scanf("%i", &contato[nContatos].numero);
+        
+            
 
-            printf("Bairro: ");
+            printf("\n\tDigite o Bairro: ");
+            scanf("%[^\n]s", pessoa.bairro);
             fflush(stdin);
-            scanf("%[^\n]s", contato[nContatos].bairro);
+            
 
-            printf("\nTipo do Rede Social:\n( 0 ) Instagram\n( 1 ) Facebook\n( 2 ) Twitter\n( 3 ) Linkedin\n( 4 ) Personalizado\n Sua escolha:");
+            printf("\n\tTipo do Rede Social:\n\t( 0 ) Instagram\n\t( 1 ) Facebook\n\t( 2 ) Twitter\n\t( 3 ) Linkedin\n\t( 4 ) Personalizado\n\t Sua escolha:");
+            scanf("%i", &pessoa.tpR);
             fflush(stdin);
-            scanf("%i", &contato[nContatos].tpR);
+            strcpy(pessoa.tpRede, obterNomeRede(pessoa.tpR));
+            
 
-            printf("\nDigite o usuário: ");
+            printf("\n\tDigite a Rede social: ");
+            scanf("%[^\n]s", pessoa.redeSocial);
             fflush(stdin);
-            scanf("%[^\n]s", contato[nContatos].redeSocial);
+        
+            fprintf(ptrAgenda, "%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n\n", pessoa.nome, pessoa.tpContato, pessoa.telefone,
+            pessoa.tpEndereco, pessoa.endereco, pessoa.numero, pessoa.bairro, pessoa.tpRede, pessoa.redeSocial);
 
-            fprintf(ptrAgenda, "%s; %s; %i; %s; %i; %s; %i; %s; %i; %s\n", 
-                contato[nContatos].nome, contato[nContatos].email, contato[nContatos].tpC,
-                contato[nContatos].telefone, contato[nContatos].tpEnd, contato[nContatos].endereco,
-                contato[nContatos].numero, contato[nContatos].bairro, contato[nContatos].tpR,
-                contato[nContatos].redeSocial);
+            printf("\n\tGravacao ok! ");
+            fprintf(ptrAgenda, "\n");
 
-            fclose(ptrAgenda);
-            ptrAgenda = NULL;
-
-            nContatos++;
             op = continuar();
+            qntd++;
+            fclose(ptrAgenda); //fecha o arquivo agenda.csv
         }
     }
     else
     {
-        printf("\n\tAgenda cheia...");
+        printf("AGENDA CHEIA...");
         getch();
     }
 }
 
-void listar(void)
+void lerArquivo()
 {
-    system("cls");
-    ptrAgenda = fopen("agenda.txt", "r");
+    FILE *lerAgenda = NULL;
+    lerAgenda = fopen(agenda, "a+");
     
-    for(int i = 0; i < 10 ; i++)
+    while(!feof(lerAgenda))
     {
-        fscanf(ptrAgenda, "%s; %s; %i; %s; %i; %s; %i; %s; %i; %s", contato[i].nome, contato[i].email, &contato[i].tpC,
-                contato[i].telefone, &contato[i].tpEnd, contato[i].endereco,
-                &contato[i].numero, contato[i].bairro, &contato[i].tpR,
-                contato[i].redeSocial);
-            
-        printf("Contato %i\n\n", i);
-        printf("Nome: %s\n", contato[i].nome);
-        printf("Email: %s\n", contato[i].email);
-        printf("Telefone: %s\tTipo: %s\n", contato[i].telefone, obterNomeContato(contato[i].tpC));
-        printf("Endereço: %s %s", obterNomeEndereco(contato[i].tpEnd), contato[i].endereco);
-        printf("\tNúmero: %i", contato[i].numero);
-        printf("\tBairro: %s\n", contato[i].bairro);
-        printf("%s: %s",obterNomeRede(contato[i].tpR), contato[i].redeSocial);
+        rewind(lerAgenda);
 
-        printf("\n\n");
+        fgets(pessoa[qntd].nome, 50, lerAgenda);
+        fgets(pessoa[qntd].tpContato, 50, lerAgenda);
+        fgets(pessoa[qntd].telefone, 50, lerAgenda);
+        fgets(pessoa[qntd].tpEndereco, 50, lerAgenda);
+        fgets(pessoa[qntd].endereco, 50, lerAgenda);
+        fgets(pessoa[qntd].numero, 50, lerAgenda);
+        fgets(pessoa[qntd].bairro, 50, lerAgenda);
+        fgets(pessoa[qntd].tpRede, 50, lerAgenda);
+        fgets(pessoa[qntd].redeSocial, 50, lerAgenda);
+        qntd++;
     }
+
+    fclose(lerAgenda);
+
+}
+/*================== Lista os contatos cadastrados ======================*/
+void Listar(void)
+{
+    // Só um teste pra ver se exibe algo
+    printf("%s", pessoa[qntd].nome);
     getch();
+
+
 }
 
 char *obterNomeContato ( enum tipoContato tpC )
 {
-    const char *nomeContato[] =
+    char *nomeContato[] =
     {
         "Comercial", "Fixo", "Pessoal", "Fax", "Personalizado"
     };
@@ -219,7 +243,7 @@ char *obterNomeContato ( enum tipoContato tpC )
 
 char *obterNomeEndereco ( enum tipoEndereco tpEnd)
 {
-    const char *nomeEndereco[] =
+    char *nomeEndereco[] =
     {
         "Al.", "Av.", "Pr.", "R.", "Tr."
     };
@@ -229,7 +253,7 @@ char *obterNomeEndereco ( enum tipoEndereco tpEnd)
 
 char *obterNomeRede ( enum tipoRede tpR )
 {
-    const char *nomeRede[] =
+    char *nomeRede[] =
     {
         "Instagram", "Facebook", "Twitter", "Linkedin", "Outros"
     };
@@ -237,15 +261,16 @@ char *obterNomeRede ( enum tipoRede tpR )
     return ( nomeRede [tpR] );
 }
 
-char continuar(void)
+char continuar()
 {
     char op;
     do
     {
-        printf("\nDeseja continuar? (S OU N)");
+        printf("\n\tDeseja continuar? (S OU N)");
         
         op = tolower (getch());
     } while (op != 's' && op != 'n');
     
     return op;
 }
+
