@@ -90,7 +90,7 @@ char *obterNomeContato ( enum tipocontato tpctt )//organizar enum
 {
     const char *nomeContato[] =
     {
-        "Comercial", "Fixo", "Pessoal", "Fax", "Personalizado"
+        "pessoal", "comercial", "fixo", "Fax", "Personalizado"
     };
 
     return ( nomeContato [tpctt]);
@@ -100,7 +100,7 @@ char *obterNomeEndereco ( enum tipoendereco tpEnd)//enum
 {
     const char *nomeEndereco[] =
     {
-        "Al.", "Av.", "Pr.", "R.", "Tr."
+        "alameda.", "avenida.", "praca.", "rua.", "travessa."
     };
 
     return ( nomeEndereco [tpEnd] );
@@ -110,7 +110,7 @@ char *obterNomeRede ( enum tiporedesocial tprd)//enum
 {
     const char *nomeRede[] =
     {
-        "Instagram", "Facebook", "Twitter", "Linkedin", "Outros"
+        "linkedin", "instagram", "twitter", "facebook", "Outros"
     };
 
     return ( nomeRede [tprd] );
@@ -148,13 +148,7 @@ void QntContatos(Agenda **c, int quant)
 
     printf("\n Lista de contatos: \n");
     for (i = 0; i < quant; i++)
-    {/*
-        printf("\t%d = aniversário: %2d de %s\t nome do contato: %s \t telefone: %s\t tipo de contato: %s\n ",
-            i + 1, c[i]->bd, c[i]->bdm, c[i]->nome, c[i]->telefone,c[i]->tpctt, c[i]->email,
-             c[i]->redesocial, c[i]->tprd, c[i]->tpEnd, c[i]->endereco, c[i]->bairro, c[i]->numero, c[i]->cep, c[i]->complemento );
-             //refazer comando acima  
-             \\o problema é que não está reconhecendo os enums e dá erro na exibição, agora refiz sem os enums
-*/
+    {// falta adicionar os enum
         printf("\t%d = nome do contato: %s \t  aniversário: %2d de %s\t telefone: %s\n\t email: %s\t usuario: %s\n\t endereco: %s\t bairro: %s\t n*: %s\t cep: %s\n\t complemento: %s  ",
             i + 1, c[i]->nome, c[i]->bd, c[i]->bdm, c[i]->telefone, c[i]->email, c[i]->redesocial, c[i]->endereco, c[i]->bairro, c[i]->numero, c[i]->cep, c[i]->complemento);
     }
@@ -262,7 +256,7 @@ int lerArquivo(contato usuario[]){ //ler o arquivo criado
 */
 
 //aqui volta o codigo////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void Pesquisar(int quant, Agenda **c)
+void Pesquisar(int quant, Agenda **c) //não funciona kkkkk
 {
     int i;
     char nomeBuscado[30];
@@ -297,7 +291,7 @@ int main()
 
     do
     {
-        printf(" \n\t0 - exit\n\t1 - Cadastrar contato na agenda\n\t2 - Remover contato\n\t3- Imprimir contatos\n\t4- Pesquisar contato\n\t");
+        printf(" \n\t(0) - exit\n\t(1) - Cadastrar contato na agenda\n\t(2) - Remover contato\n\t(3)- Imprimir contatos\n\t(4)- Pesquisar contato\n\t");
         scanf("%d", &opcao);
         getchar();
 
@@ -317,9 +311,7 @@ int main()
             break;
 
          default:
-        printf("------------------------------------------\n");
         printf("- Essa Opcao nao Existe.                 -\n");
-        printf("------------------------------------------\n");
         break;
         }
     } while (opcao != 0);
