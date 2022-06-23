@@ -23,8 +23,8 @@ typedef struct
     char endereco[50];
     char bairro[30];
     char complemento [50];
-    int numero;
-    int cep; 
+    char numero [6];
+    char cep [9]; 
     enum tipoendereco tpEnd;    
   
 } Agenda;
@@ -155,7 +155,7 @@ void QntContatos(Agenda **c, int quant)
              //refazer comando acima  
              \\o problema é que não está reconhecendo os enums e dá erro na exibição, agora refiz sem os enums
 */
-        printf("\t%d = nome do contato: %s \t  aniversário: %2d de %s\t telefone: %s\n\t email: %s\t usuario: %s\n\t endereco: %s\t bairro: %s\t n*: %d\t cep: %d\n\t complemento: %s  ",
+        printf("\t%d = nome do contato: %s \t  aniversário: %2d de %s\t telefone: %s\n\t email: %s\t usuario: %s\n\t endereco: %s\t bairro: %s\t n*: %s\t cep: %s\n\t complemento: %s  ",
             i + 1, c[i]->nome, c[i]->bd, c[i]->bdm, c[i]->telefone, c[i]->email, c[i]->redesocial, c[i]->endereco, c[i]->bairro, c[i]->numero, c[i]->cep, c[i]->complemento);
     }
 }
