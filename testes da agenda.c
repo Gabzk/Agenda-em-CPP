@@ -226,6 +226,7 @@ void inserirContato(contatos contato){
 
 }
 
+
 void inserirContatoSelecionado(int selecionado, contatos editado){
 
     FILE *arq = fopen (agenda, "a");
@@ -237,7 +238,7 @@ void inserirContatoSelecionado(int selecionado, contatos editado){
         exit(1);
     }
     else{
-		salvarContatoEditado(editado, arq);
+		salvarContato(editado, arq);
 		vetorContatos[selecionado] = editado;
 	}
     
@@ -245,8 +246,6 @@ void inserirContatoSelecionado(int selecionado, contatos editado){
 	
 
 }
-
-
 void salvarContato(contatos contato, FILE *arq){
 
     fprintf(arq,contato.nome);
@@ -260,7 +259,7 @@ void salvarContato(contatos contato, FILE *arq){
     fprintf(arq,contato.redes_sociais1);
 
 }
-
+/*
 void salvarContatoEditado(contatos editado, FILE *arq){
 
     fprintf(arq,editado.nome);
@@ -273,7 +272,7 @@ void salvarContatoEditado(contatos editado, FILE *arq){
     fprintf(arq,"%i\n",editado.trede);
     fprintf(arq,editado.redes_sociais1);
 
-}
+}*/
 
 int resscreverArq(int ignorar){ 
 
@@ -319,66 +318,66 @@ void editarContato (){
         printf("\n \t NOVO Nome: ");
         fflush(stdin);
         fgets(editado.nome, 50, stdin);
-            /*if(contato.nome>1){
-            strcpy(vetorContatos[selecionado].nome, contato.nome);}*/
+            if(editado.nome>1){
+            strcpy(vetorContatos[selecionado].nome, editado.nome);}
 
     
         printf("\n\t NOVO Tipo de Endereco: ");
         fflush(stdin);
         scanf("%i",&editado.tendereco);
-             /*if(contato.tendereco>1){
-            strcpy(&vetorContatos[selecionado].tendereco, &contato.tendereco);}*/
+             if(editado.tendereco>1){
+            strcpy(&vetorContatos[selecionado].tendereco, &editado.tendereco);}
         
         
         printf("\n \t NOVO Endereco: ");
         fflush(stdin);
         fgets(editado.endereco, 50, stdin);
-            /* if(contato.endereco>1){
-            strcpy(vetorContatos[selecionado].endereco, contato.endereco);}*/
+            if(editado.endereco>1){
+            strcpy(vetorContatos[selecionado].endereco, editado.endereco);}
 
     
         printf("\n\t NOVO Numero da residencia: ");
         fflush(stdin);
         scanf("%i",&editado.numero);
-            /* if(contato.numero>1){
-            strcpy(&vetorContatos[selecionado].numero, &contato.numero);} */ 
+            if(editado.numero>1){
+            strcpy(&vetorContatos[selecionado].numero, &editado.numero);}
 
 
         printf("\n\t NOVO Tipo de contato: ");
         fflush(stdin);
         scanf("%i",&editado.tcontato);
-            /* if(contato.tcontato>1){
-            strcpy(&vetorContatos[selecionado].tcontato, &contato.tcontato);} */
+            if(editado.tcontato>1){
+            strcpy(&vetorContatos[selecionado].tcontato, &editado.tcontato);} 
     
 
         printf("\n \t NOVO Numero para contato: ");
         fflush(stdin);
         fgets(editado.contato, 50, stdin);
-            /* if(contato.contato>1){
-            strcpy(vetorContatos[selecionado].contato, contato.contato);}*/
+            if(editado.contato>1){
+            strcpy(vetorContatos[selecionado].contato, editado.contato);}
 
 
         printf("\n \t NOVO Email: ");
         fflush(stdin);
         fgets(editado.email, 50, stdin);
-            /* if(contato.email>1){
-            strcpy(vetorContatos[selecionado].email, contato.email);}*/
+            if(editado.email>1){
+            strcpy(vetorContatos[selecionado].email, editado.email);}
 
 
         printf("\n \t NOVO Tipo de rede social: ");
         fflush(stdin);
         scanf("%i",&editado.trede);
-            /* if(contato.trede>1){
-            strcpy(&vetorContatos[selecionado].trede, &contato.trede);}*/
+            if(editado.trede>1){
+            strcpy(&vetorContatos[selecionado].trede, &editado.trede);}
 
         printf("\n \t NOVA Rede social: ");
         fflush(stdin);
         fgets(editado.redes_sociais1, 50, stdin);
-            /* if(contato.redes_sociais1>1){
-            strcpy(vetorContatos[selecionado].redes_sociais1, contato.redes_sociais1);}*/
+            if(editado.redes_sociais1>1){
+            strcpy(vetorContatos[selecionado].redes_sociais1, editado.redes_sociais1);}
 
 
-        inserirContatoSelecionado(selecionado, editado);
+        
 
         }else{
             printf("\n\t Esse valor ultrapassa a quantidade de contatos da Agenda! \n");
@@ -461,7 +460,6 @@ void procurarContato(){
         }
     }
 }
-
 
 void deletarContato (){
 
