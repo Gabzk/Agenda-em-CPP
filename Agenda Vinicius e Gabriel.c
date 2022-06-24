@@ -32,7 +32,7 @@ void carregarAgenda();
 void salvarContato(contatos contato, FILE *arq);
 void inserirContato(contatos contato);
 void criarContato();
-int reescreverArq (int ingnorar); // funcao que ira ignorar um determinando contato e reescrever a agenda
+int reescreverArq (int ingnorar); // FUNÇÃO QUE IRA IGNORAR UM DETERMINADO CONTATO E REESCREVER A AGENDA
 void mostrarContato(int i);
 void listarContatos();
 int compararLetras();
@@ -41,113 +41,132 @@ void editarContato ();
 void deletarContato();
 
 
-static int qtd = 0;     // variavel que conta a quantidade de contatos incritos
-contatos vetorContatos[MAX];
+static int qtd = 0;     // VARIÁVEL QUE CONTA QUANTIDADE DE CONTATOS INSCRITOS
+contatos vetorContatos[MAX]; // VARIÁVEL DE CONTATOS
 
 
-int main(void){
+int main(void)
+{
 
-carregarAgenda();
+    carregarAgenda();
 
-system("cls");
-system("COLOR 8F");
+    system("cls");
+    system("COLOR 8F");
 
-int op=0;
+    char op; // VARIÁVEL DE OPÇÃO.
 
-do{
-system("cls");
+    do
+    {
+        system("cls"); // COMANDO PARA LIMPAR A TELA.
 
-//MENU DA AGENDA
-printf ("\n\t ######## AGENDA ######## \n");
-printf ("\t -- ESCOLHA UMA OPCAO -- \n\n");
-printf ("\t 1 - ADICIONAR CONTATO \n");
-printf ("\t 2 - ALTERAR CONTATO \n");
-printf ("\t 3 - CONSULTAR CONTATO \n");
-printf ("\t 4 - DELETAR CONTATO \n");
-printf ("\t 5 - LISTAR CONTATOS \n");
-printf ("\t 6 - SAIR \n");
-printf("\n Opcao: ");
-scanf ("%d", &op);
+        //MENU DA AGENDA.
+        printf ("\n\t ######## AGENDA ######## \n");
+        printf ("\t -- ESCOLHA UMA OPCAO -- \n\n");
+        printf ("\t 1 - ADICIONAR CONTATO \n");
+        printf ("\t 2 - ALTERAR CONTATO \n");
+        printf ("\t 3 - CONSULTAR CONTATO \n");
+        printf ("\t 4 - DELETAR CONTATO \n");
+        printf ("\t 5 - LISTAR CONTATOS \n");
+        printf ("\t 6 - SAIR \n");
+        
+        op = getch();
 
-        switch (op)
-            {
-            case(1):
+        // SWITCH CASE PARA OPÇÕES DO MENU.
+        switch (op) 
+        {
+            // CRIAR CONTATO.
+            case '1': 
             system("cls");
             fflush(stdin);
             criarContato();
             break;
-        
-            case(2):
+            
+            // EDITAR CONTATO.
+            case '2':
             system("cls");
             fflush(stdin);
             editarContato();
-            
             break;
 
-            case(3):
+            // PESQUISAR CONTATO.
+            case '3':
             system("cls");
             fflush(stdin);
             procurarContato(); 
             break;
 
-            case(4):
+            // DELETAR CONTATO.
+            case '4':
             system("cls");
             fflush(stdin);
             deletarContato(); 
             break;
 
-            case(5):
+            // LISTAR CONTATO.
+            case '5':
             system("cls");
             fflush(stdin);
             listarContatos(); 
             break;
 
-            case(6):
+            // ENCERRAR PROGRAMA.
+            case '6':
             system("cls");
-            printf("\n\t Encerrando...");
-            exit(1);
-
-            default:
-            printf("\n Operacao INVALIDA!");
+            printf("\n\tPrograma Encerrado...!\n");
             break;
+
+            // OPERAÇÃO INVÁLIDA.
+            default:
+            printf("\n\tOpcao invalida. Digite novamente...");
+            op = getch();
+            break;
+
         }
-    }
-    while(op);
-    
+    } while(op != '6'); // CONDIÇÃO PARA O LOOP CONTINUAR.
+        
 
     return 0;
 }
 
-void carregarAgenda (){
+/* -------- SUB-ROTINA DE CARREGAMENTO DOS CONTATO DO ARQUIVO --------*/
+void carregarAgenda ()
+{
+    
+    FILE *arq = fopen(agenda, "r"); // ABERTURA DO ARQUIVO.
 
-    FILE *arq = fopen(agenda, "r");
-
-    qtd = 0;
+    qtd = 0; // VARIÁVEL DE CONTAGEM.
 	
-	if(!arq == NULL){
-		rewind(arq);			
+	if(!arq == NULL)
+    {
+		rewind(arq); // COMANDO PARA IR ATÉ O INÍCIO DO ARQUIVO			
 		
-		while(!feof(arq)){      //feof diz quando o arquivo chega ao fim.
-			fgets(vetorContatos[qtd].nome, 50, arq);
-			if(strcmp(vetorContatos[qtd].nome, "") > 0){ 
-				fgets(&vetorContatos[qtd].tendereco, 10, arq);
-				fgets(vetorContatos[qtd].endereco, 50, arq);
-                fgets(&vetorContatos[qtd].numero, 20, arq);
-                fgets(&vetorContatos[qtd].tcontato, 10, arq);
-                fgets(vetorContatos[qtd].contato, 50, arq);
-                fgets(vetorContatos[qtd].email, 50, arq);
-                fgets(&vetorContatos[qtd].trede, 10, arq);
+		while(!feof(arq)) //FEOF DIZ QUANDO O ARQUIVO CHEGA AO FIM.
+        {
+        	fgets(vetorContatos[qtd].nome, 50, arq);
+
+			if(strcmp(vetorContatos[qtd].nome, "") > 0) // VERIFICAÇÃO SE O CONTATO DO INDICE ATUAL NÃO ESTÁ VÁZIO
+            { 
+                // CARREGAMENTO DOS DADOS DO ARQUIVO PARA A VARIÁVEL
+				fgets(&vetorContatos[qtd].nomeTipoEnd,       10, arq);
+				fgets(vetorContatos[qtd].endereco,       50, arq);
+                fgets(&vetorContatos[qtd].numero,        20, arq);
+                fgets(&vetorContatos[qtd].nomeTipoContato,       10, arq);
+                fgets(vetorContatos[qtd].telefone,        50, arq);
+                fgets(vetorContatos[qtd].email,          50, arq);
+                fgets(&vetorContatos[qtd].nomeTipoRede,       10, arq);
                 fgets(vetorContatos[qtd].redes_sociais1, 50, arq);
+
 				qtd++;
-                
 			}
 		}		
 	}
-    else{
+    
+    else
+    {
 		printf("ERRO ao carregar agenda!.\n");
 	}
 
-    fclose(arq);
+    fclose(arq); // FECHAMENTO DO ARQUIVO
 }
 
 void criarContato (){
