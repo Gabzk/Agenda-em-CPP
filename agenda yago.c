@@ -3,36 +3,45 @@
 #include <string.h>
 #include <locale.h>
 
-enum tipoendereco{alameda=1, avenida, praca, rua, travessa};
-enum tipocontato{pessoal=1, comercial, fixo, fax, personalizado};
-enum tiporedesocial{linkedin=1, instagram, twitter, facebook, outros};
 
 typedef struct
 {
-    //aniversario nome
+    //nome
     char nome[50];
-    int bd;
-    char bdm[10];
     //formas de contato
     char telefone[12];
+    char tipocontato [20];
     char email[60];
     char redesocial[50];
-    enum tipocontato tpctt;                                             
-    enum tiporedesocial tprd;
+    char tipoderede [20];
     //endereço
     char endereco[50];
     char bairro[30];
     char complemento [50];
-    char numero [6];
-    char cep [9]; 
-    enum tipoendereco tpEnd;    
-  
+ 
+
 } Agenda;
 
-int adicionarContato(Agenda **c, int quant, int tam)
+char continuar()//continuar criando contatos
 {
-    if (quant < tam)
+    char op; // Variável de opção
+
+    // Laço para perguntar se quer continuar
+    do
     {
+        printf("\n\tDeseja continuar? (S OU N)");
+
+        op = tolower (getch()); // Recebimento da resposta convertendo em caixa baixa para evitar erros
+    } while (op != 's' && op != 'n');
+
+    return op; // Retorno da resposta
+}
+
+int adicionarContato(Agenda **c, int quant, int tam)//adicionar contatos
+{
+    char op = 's';
+    if (quant < tam)
+    {   while ((quant < tam) && (op == 's')){
         Agenda *novo = malloc(sizeof(Agenda));
         printf("\nDigite o nome do contato a ser salvo:\n ");
         scanf("%[^\n]s", &novo->nome);
@@ -40,87 +49,50 @@ int adicionarContato(Agenda **c, int quant, int tam)
         printf ("digite seu email\n");
         scanf ("%[^\n]s", &novo->email );
         fflush ( stdin );
-        printf ("escolha uma rede social de sua preferencia\n (1)-linkedin\n (2)-instagram\n (3)-twitter\n (4)-Facebook\n (5)-Outros\n");
-        scanf ("%i", &novo-> tprd);
-        fflush( stdin);
-        printf ("digite seu usuario nesta rede\n");
+        printf ("digite seu usuario em uma rede social de sua preferencia\n");
         scanf ("%[^\n]s", &novo->redesocial );
         fflush ( stdin );
+         printf ("qual foi a rede social escolhida?\n");
+        scanf ("%[^\n]s", &novo-> tipoderede);
+        fflush( stdin);
         printf("\ndigite o seu telefone com DDD\n: ");
-        fflush ( stdin );
         scanf("%11[0123456789]s", &novo->telefone);
         fflush ( stdin);
-        printf("o tipo de contato fornecido foi\n (1)-pessoal\n (2)-comercial\n (3)-fixo\n (4)-fax\n (5)-outros\n");
-        scanf ("%i", &novo-> tpctt);
+        printf("o tipo de contato fornecido foi?\n pessoal, comercial ou outros?\n");
+        scanf ("%[^\n]s", &novo-> tipocontato);
         fflush ( stdin);
-        printf ("voce mora em uma\n (1)-alameda\n (2)-avenida\n (3)-praca\n (4)-rua\n (5)-travessa\n ");
-        scanf ("%i", &novo-> tprd);
-        fflush ( stdin);
-        printf ("digite seu endereço\n");
-        scanf ("%[^\n]s", &novo->endereco );
-        fflush ( stdin );
         printf ("digite seu bairro\n");
         scanf ("%[^\n]s", &novo->bairro );
         fflush ( stdin );
-        printf ("digite o numero de sua residencia\n");
-        scanf ("%[^\n]s", &novo->numero );
-        fflush ( stdin );
-        printf ("digite o cep de sua regiao\n");
-        scanf ("%[^\n]s", &novo->cep );
+        printf ("digite seu endereço\n");
+        scanf ("%[^\n]s", &novo->endereco );
         fflush ( stdin );
         printf ("digite um complemento\n");
         scanf ("%[^\n]s", &novo->complemento );
         fflush ( stdin );
-        printf("\nDigite o dia do seu aniversário ");
-        fflush ( stdin );
-        scanf("%d", &novo->bd);
-        printf("\n digite o mês do seu nascimento: ");
-        fflush ( stdin );
-        scanf("%s", &novo->bdm);
         c[quant] = novo;
-        return 1;
-    }
+        quant++;//acrecenta 1 contato a mais
+         op =continuar();//chama a função que pergunta se deseja inserir novos contatos
+
+    } 
+   return; 
+    } 
+    
+    
     else
     {
-        printf("\n Lista cheia.\n");
+        printf("\n Lista cheia.\n");//caso o tam chegue ao maximo
         return 0;
     }
-}
-char *obterNomeContato ( enum tipocontato tpctt )//organizar enum
-{
-    const char *nomeContato[] =
-    {
-        "pessoal", "comercial", "fixo", "Fax", "Personalizado"
-    };
-
-    return ( nomeContato [tpctt]);
+      op = continuar ();
 }
 
-char *obterNomeEndereco ( enum tipoendereco tpEnd)//enum
-{
-    const char *nomeEndereco[] =
-    {
-        "alameda.", "avenida.", "praca.", "rua.", "travessa."
-    };
-
-    return ( nomeEndereco [tpEnd] );
-}
-
-char *obterNomeRede ( enum tiporedesocial tprd)//enum
-{
-    const char *nomeRede[] =
-    {
-        "linkedin", "instagram", "twitter", "facebook", "Outros"
-    };
-
-    return ( nomeRede [tprd] );
-}
 
 int deleteContact(Agenda **c, int quant)
 {
     int id;
 
-    QntContatos(c, quant);
+    QntContatos(c, quant);//deletar contatos
 
     printf("\n\t Digite o número do usuário que você quer deletar: \n");
     scanf("%d", &id);
@@ -142,138 +114,39 @@ int deleteContact(Agenda **c, int quant)
     }
 }
 
-void QntContatos(Agenda **c, int quant)
+void QntContatos(Agenda **c, int quant)//exibe contatos salvos
 {
     int i;
-
     printf("\n Lista de contatos: \n");
     for (i = 0; i < quant; i++)
-    {// falta adicionar os enum
-        printf("\t%d = nome do contato: %s \t  aniversário: %2d de %s\t telefone: %s\n\t email: %s\t usuario: %s\n\t endereco: %s\t bairro: %s\t n*: %s\t cep: %s\n\t complemento: %s  ",
-            i + 1, c[i]->nome, c[i]->bd, c[i]->bdm, c[i]->telefone, c[i]->email, c[i]->redesocial, c[i]->endereco, c[i]->bairro, c[i]->numero, c[i]->cep, c[i]->complemento);
-    }
-}
-//funções para teste//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-/*
-
-void ordenarContatos( contato usuario[], int nContatos)//organizar em ordem alfabética
-{
-    int comp;
-    contato secundaria;
-
-    for (int i = 0; i < nContatos; i++)
     {
-        for (int j = i+1; j < nContatos; j++)
-        {
-            comp = strcmp(usuario[i]->nome, usuario[j]->nome);
-            if (comp>0){
-                secundaria = usuario[i];
-                usuario[i] = usuario[j];
-                usuario[j] = secundaria;
-            }
+        printf("\n\t%d = nome do contato: %s \t telefone: %s\t tipo de contato: %s\n\t email: %s\t usuario: %s\t rede social escolhida: %s\n\t endereco: %s\t bairro: %s\n\t complemento: %s  ",
+            i + 1, c[i]->nome, c[i]->telefone,c[i]->tipocontato ,c[i]->email, c[i]->redesocial,c[i]->tipoderede ,c[i]->endereco, c[i]->bairro, c[i]->complemento);
+            
     }
-    
 }
 
-}
-
-void gravarArquivo(contato usuario[], int nContatos){ //cria o arquivo
-
-           // Criação do Arquivo e abertura do arquivo
-       
-        FILE *ptrArquivo = NULL;
-
-        //trocado de a para w por que a apenas adiciona contato por contato
-        // porem DA erro quando tentamos excluir entao o melhor é deixar w
-        ptrArquivo = fopen ("agendinha-da-depressaum.txt", "w");
-
-            if(ptrArquivo == NULL){
-                printf("ALGO DEU ERRADO PATRÃO..\n");
-                exit(0);
-            }
-
-        for(int l = 0; l < nContatos; l++)
-            {
-                fprintf(ptrArquivo, "%s;%s;%s;%s;%s;\n", 
-                usuario[l].nome_contato,
-                usuario[l].endereco,
-                usuario[l].telefone,
-                usuario[l].email,
-                usuario[l].rede_social );
-            }
-        
-        fclose(ptrArquivo);
-        ptrArquivo = NULL;
-}
-
-int lerArquivo(contato usuario[]){ //ler o arquivo criado
-
-        // Leitura do arquivo já criado
-
-        char *token;
-        char linhazinha[200];
-
-        int i = 0;
-        FILE *ptrArquivo = NULL;
-        ptrArquivo = fopen ("agendinha-da-depressaum.txt", "r");
-        if(ptrArquivo == NULL){
-            printf("ALGO DEU ERRADO PATRÃO..");
-            return 0;
-        }
-
-
-    while( (fgets(linhazinha, sizeof(linhazinha), ptrArquivo) ) != NULL){
-
-        token = strtok(linhazinha, ";");
-
-        strcpy(usuario[i].nome_contato, token);
-
-        token = strtok(NULL, ";");
-
-        strcpy(usuario[i].endereco, token);
-
-        token = strtok(NULL, ";");
-
-        strcpy(usuario[i].telefone, token);
-
-        token = strtok(NULL, ";");
-
-        strcpy(usuario[i].email, token);        
-
-        token = strtok(NULL, ";");
-
-        strcpy(usuario[i].rede_social, token);      
-
-        i++;
-    }
-
-        fclose(ptrArquivo);
-        ptrArquivo = NULL;
-
-        return i;
-*/
-
-//aqui volta o codigo////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void Pesquisar(int quant, Agenda **c) //não funciona kkkkk
+void Pesquisar(Agenda **c, int quant) //pesquisar um contato na agenda
 {
     int i;
-    char nomeBuscado[30];
+    char nomeBuscado[50];
+    char nomeAgenda[50];
 
     printf("\n digite o nome a ser pesquisado: \n");
+    setbuf(stdin, NULL);
     scanf("%s", &nomeBuscado);
     getchar();
-
-    for (i = 0; i < quant; i++)
-    {
-        if (strcmp(nomeBuscado, c[i]->nome) == 0)
-        {
-            printf("o nome: %s foi encontrado com sucesso", c[i]->nome);
-        }
-        else
-        {
-            printf("o nome não foi encontrado");
+    strlwr(nomeBuscado);
+    for (i = 0; i <= quant; i++){
+        strcpy(nomeAgenda, c[i]->nome);
+        strlwr(nomeAgenda);
+        if (strstr(nomeAgenda, nomeBuscado)){
+            printf("\nO nome: %s foi encontrado com sucesso", c[i]->nome);
+            printf("\n\t%d = nome do contato: %s \t telefone: %s\t tipo de contato: %s\n\t email: %s\t usuario: %s\t rede social escolhida: %s\n\t endereco: %s\t bairro: %s\n\t complemento: %s  ",
+            i + 1, c[i]->nome, c[i]->telefone,c[i]->tipocontato ,c[i]->email, c[i]->redesocial,c[i]->tipoderede ,c[i]->endereco, c[i]->bairro, c[i]->complemento);//exibe as informações do contato
+            break;
+        }else{
+            printf("\nnao tem resultados correspondentes.");
         }
     }
 }
@@ -284,37 +157,46 @@ int main()
 
     Agenda *contatos[500];
     char arquivo[] = ("agenda.txt");
-    int opcao, tam = 500, quant = 0;
-
+    int opcao, tam = 500, quant = 0;//numero de contatos
 
 
 
     do
     {
-        printf(" \n\t(0) - exit\n\t(1) - Cadastrar contato na agenda\n\t(2) - Remover contato\n\t(3)- Imprimir contatos\n\t(4)- Pesquisar contato\n\t");
+        
+        printf(" \n\t(0) - exit\n\t(1) - Cadastrar contato na agenda\n\t(2) - Remover contato\n\t(3)- Imprimir contatos\n\t(4)- Pesquisar contato\n\t\n\t(4)- Modificar contato\n\t");//exibir menu
         scanf("%d", &opcao);
         getchar();
 
         switch (opcao)
         {
         case 1:
-            quant += adicionarContato(contatos, quant, tam);
+            quant += adicionarContato(contatos, quant, tam);//adicionar contato
             break;
         case 2:
-            quant += deleteContact(contatos, quant);
+            quant += deleteContact(contatos, quant);//deletar contato
             break;
         case 3:
-            QntContatos(contatos, quant);
+            QntContatos(contatos, quant);//listar contatos
+          
             break;
         case 4:
-            Pesquisar(contatos, quant);
+            Pesquisar(contatos, quant);//pesquisar contato
             break;
 
-         default:
+            case 5:
+              break;
+
+            case 0:
+            printf("Adeus");
+            break;
+
+         default://para se o usuario digitar outra coisa
         printf("- Essa Opcao nao Existe.                 -\n");
         break;
+        
         }
-    } while (opcao != 0);
+    } while (opcao != 0);//saair
 
     return 0;
 }
