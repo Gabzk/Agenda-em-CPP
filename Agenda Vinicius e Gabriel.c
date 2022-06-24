@@ -32,13 +32,13 @@ void carregarAgenda();
 void salvarContato(contatos contato, FILE *arq);
 void inserirContato(contatos contato);
 void criarContato();
-int reescreverArq (int ingnorar); // FUNÇÃO QUE IRA IGNORAR UM DETERMINADO CONTATO E REESCREVER A AGENDA
 void mostrarContato(int i);
 void listarContatos();
 int compararLetras();
 void procurarContato();
 void editarContato ();
 void deletarContato();
+char continuar();
 
 
 static int qtd = 0;     // VARIÁVEL QUE CONTA QUANTIDADE DE CONTATOS INSCRITOS
@@ -76,7 +76,6 @@ int main(void)
         {
             // CRIAR CONTATO.
             case '1': 
-            system("cls");
             fflush(stdin);
             criarContato();
             break;
@@ -122,7 +121,7 @@ int main(void)
             break;
 
         }
-    } while(op != '6'); // CONDIÇÃO PARA O LOOP CONTINUAR.
+    } while(op != '6'); // Condição para o loop continuar
         
 
     return 0;
@@ -147,13 +146,13 @@ void carregarAgenda ()
 			if(strcmp(vetorContatos[qtd].nome, "") > 0) // VERIFICAÇÃO SE O CONTATO DO INDICE ATUAL NÃO ESTÁ VÁZIO
             { 
                 // CARREGAMENTO DOS DADOS DO ARQUIVO PARA A VARIÁVEL
-				fgets(&vetorContatos[qtd].nomeTipoEnd,       10, arq);
-				fgets(vetorContatos[qtd].endereco,       50, arq);
-                fgets(&vetorContatos[qtd].numero,        20, arq);
-                fgets(&vetorContatos[qtd].nomeTipoContato,       10, arq);
-                fgets(vetorContatos[qtd].telefone,        50, arq);
-                fgets(vetorContatos[qtd].email,          50, arq);
-                fgets(&vetorContatos[qtd].nomeTipoRede,       10, arq);
+				fgets(&vetorContatos[qtd].tendereco, 10, arq);
+				fgets(vetorContatos[qtd].endereco, 50, arq);
+                fgets(&vetorContatos[qtd].numero, 20, arq);
+                fgets(&vetorContatos[qtd].tcontato, 10, arq);
+                fgets(vetorContatos[qtd].contato, 50, arq);
+                fgets(vetorContatos[qtd].email, 50, arq);
+                fgets(&vetorContatos[qtd].trede, 10, arq);
                 fgets(vetorContatos[qtd].redes_sociais1, 50, arq);
 
 				qtd++;
@@ -169,83 +168,98 @@ void carregarAgenda ()
     fclose(arq); // FECHAMENTO DO ARQUIVO
 }
 
+/* -------- SUB-ROTINA DE CRIAÇÃO DE NOVOS CONTATOS --------*/
 void criarContato (){
 
-contatos contato;
+    contatos contato; // VARIÁVEL DE CONTATO
+    char op = 's'; // VARIÁVEL DE OPÇÃO
 
-    if(qtd < MAX){
+    
+    if(qtd < MAX) // VERIFICAÇÃO SE A AGENDA ESTÁ CHEIA
+    {
+        while(op == 's') 
+        {
+            system("cls");
+            printf("\n\tPREENCHA OS CAMPOS A SEGUIR: \n");
+            
+            printf("\n\tNome:");
+            fflush(stdin);
+            fgets(contato.nome,50,stdin);
+            
+            printf("\n\tTipo de endereco: \n\t( 0 ) Alameda \n\t( 1 ) Avenida \n\t( 2 ) Praca \n\t( 3 ) Rua \n\t( 4 ) Travessa \n\t Opcao: ");
+            fflush(stdin);
+            scanf("%i",&contato.tendereco);
+            
+            printf("\n\tEndereco:");
+            fflush(stdin);
+            fgets(contato.endereco,50,stdin);
 
-        printf("\n\tPREENCHA OS CAMPOS A SEGUIR: \n");
-        
-        printf("\n\tNome:");
-        fflush(stdin);
-        fgets(contato.nome,50,stdin);
-        
-        printf("\n\tTipo de endereco: \n\t( 0 )-Alameda \n\t( 1 )-Avenida \n\t( 2 )-Praca \n\t( 3 )-Rua \n\t( 4 )-Travessa \n\t Opcao: ");
-        fflush(stdin);
-        scanf("%i",&contato.tendereco);
-        
-        printf("\n\tEndereco:");
-        fflush(stdin);
-        fgets(contato.endereco,50,stdin);
+            printf("\n\tNumero:");
+            fflush(stdin);
+            scanf("%i",&contato.numero);
+            
+            printf("\n\tTipo de contato: \n\t( 0 ) Celular \n\t( 1 ) Comercial \n\t( 2 ) Fixo \n\t( 3 ) Pessoal \n\t( 4 ) Fax \n\t( 5 ) Personalizado");
+            
+            printf("\n\tOpcao: ");
+            fflush(stdin);
+            scanf("%i",&contato.tcontato);
+            
+            printf("\n\tTelefone para contato:");
+            fflush(stdin);
+            fgets(contato.contato,12,stdin);
+            
+            printf("\n\tEmail:");
+            fflush(stdin);
+            fgets(contato.email,50,stdin);
+            
+            printf("\n\tTipo de rede social: \n\t( 0 ) Instagram \n\t( 1 ) Facebook \n\t( 2 ) Linkedin \n\t( 3 ) Outros");
+            
+            printf("\n\tOpcao: ");
+            fflush(stdin);
+            scanf("%i",&contato.trede);
+            
+            printf("\n\tRede Social:");
+            fflush(stdin);
+            fgets(contato.redes_sociais1,50,stdin);
 
-        printf("\n\tNumero:");
-        fflush(stdin);
-        scanf("%i",&contato.numero);
-        
-        printf("\n\tTipo de contato: \n\t( 0 )-Celular \n\t( 1 )-Comercial \n\t( 2 )-Fixo \n\t( 3 )-Pessoal \n\t( 4 )-Fax \n\t( 5 )-Personalizado");
-        
-        printf("\n\tOpcao: ");
-        fflush(stdin);
-        scanf("%i",&contato.tcontato);
-        
-        printf("\n\tTelefone para contato:");
-        fflush(stdin);
-        fgets(contato.contato,12,stdin);
-        
-        printf("\n\tEmail:");
-        fflush(stdin);
-        fgets(contato.email,50,stdin);
-        
-        printf("\n\tTipo de rede social: \n\t( 0 )-Instagram \n\t( 1 )-Facebook \n\t( 2 )-Linkedin \n\t( 3 )-Outros");
-        
-        printf("\n\tOpcao: ");
-        fflush(stdin);
-        scanf("%i",&contato.trede);
-        
-        printf("\n\tRede Social:");
-        fflush(stdin);
-        fgets(contato.redes_sociais1,50,stdin);
-
-    inserirContato(contato);
-    }else{
-    printf("\n\t Memoria insuficiente! ");
+            inserirContato(contato); // CHAMADA DE SUB-ROTINA DE INSERÇÃO
+            op = continuar();
+        }
+    }
+    else
+    {
+        printf("\n\t MEMÓRIA INSUFICIENTE...!");
+    }
 }
-}
 
-void inserirContato(contatos contato){
-
+/* -------- SUB-ROTINA DE INSERÇÃO DE CONTATO --------*/
+void inserirContato(contatos contato)
+{
     FILE *arq = fopen (agenda, "a+");
 	
-	if(arq == NULL){                             // Teste para ver se o arquivo abriu corretamente
+	if(arq == NULL)     // Teste para ver se o arquivo abriu corretamente
+    {                             
         printf("Erro ao abrir o arquivo!");     // Mensagem exibida se o arquivo der erro
         getchar();                             // Eseprando resposta do usario para sair do programa
         exit(1);
     }
-    else{
-		salvarContato(contato, arq);
+    else
+    {
+		salvarContato(contato, arq);    // Chamada de sub-rotina para salvar o contato
 		vetorContatos[qtd] = contato;
 		qtd++;
 	}
     
-	fclose(arq);
+	fclose(arq); // Fechamento do arquivo
 	
 
 }
 
-void salvarContato(contatos contato, FILE *arq){
-
-    fprintf(arq,contato.nome);
+/* -------- SUB-ROTINA DE GRAVAÇÃO DE CONTATOS --------*/
+void salvarContato(contatos contato, FILE *arq)
+{
+    // Todas as partes da struct sendo imprimidas no arquivo
+    fprintf(arq,contato.nome); // fprint é a funçãa que imprime algo no arquivo
     fprintf(arq,"%i\n",contato.tendereco);
     fprintf(arq,contato.endereco);
     fprintf(arq,"%i\n",contato.numero);
@@ -254,128 +268,129 @@ void salvarContato(contatos contato, FILE *arq){
     fprintf(arq,contato.email);
     fprintf(arq,"%i\n",contato.trede);
     fprintf(arq,contato.redes_sociais1);
-
 }
 
-int resscreverArq(int ignorar){ 
 
-    int r = 0;
-    
-    remove(agenda);
-    FILE *arq = fopen (agenda, "a+");
-
-    if(!arq == NULL){
-        for (int i = 0; i < qtd; i++){
-            if(i != ignorar){
-                salvarContato(vetorContatos[i], arq);
-            }
-        }
-        r = 1;
-    }
-
-
-    return r;
-}
-
-void editarContato (){
-
-    FILE *arq = fopen(agenda,"r+");
+/* -------- SUB-ROTINA DE EDIÇÃO DE CONTATOS --------*/
+void editarContato ()
+{
+    FILE *arq = fopen(agenda,"r+"); // leitura da agenda
 
     int opcao = 0;
-    int selecionado, op = 0;   // o -1 serve para desfazer a formatacao de exibicao em mostrarContatos 
-    contatos editado;
+    int selecionado, op = 0;   // o 1 serve para desfazer a formatacao de exibicao em mostrarContatos 
+    contatos editado;          // contato auxiliar para edição
 
-    printf("\n\t Digite numero (id) do contato: ");
+    printf("\n\t Digite numero (id) do contato: "); // Escolha de qual contato editar
     fflush(stdin);
     scanf("%i", &selecionado);
 
-     if(selecionado < MAX){
-
-        
-        
+    if(selecionado < MAX) // Verificando se o número digitado não é maior que o limite
+    {
         printf("\n\t Contato selecionado: %s \n", vetorContatos[selecionado].nome);
-        mostrarContato(selecionado);
+        mostrarContato(selecionado); // Sub-rotina que exibe o contato selecionado
         printf("\n\t ----------------------- \n");
 
         printf("\n\t EDITAR CONTATO \n");
         printf("\n \t NOVO Nome: ");
         fflush(stdin);
-        fgets(editado.nome, 50, stdin);
-            if(editado.nome>1){
-            strcpy(vetorContatos[selecionado].nome, editado.nome);}
 
-    
+        fgets(editado.nome, 50, stdin);
+        if(editado.nome>1)
+        {
+            strcpy(vetorContatos[selecionado].nome, editado.nome); // comando que copia as informações do contato auxiliar para o antigo
+        }
+
         printf("\n\t NOVO Tipo de Endereco: ");
         fflush(stdin);
         scanf("%i",&editado.tendereco);
-             if(editado.tendereco>1){
-            strcpy(&vetorContatos[selecionado].tendereco, &editado.tendereco);}
-        
+
+        if(editado.tendereco>1)
+        {
+            strcpy(&vetorContatos[selecionado].tendereco, &editado.tendereco);
+        }
         
         printf("\n \t NOVO Endereco: ");
         fflush(stdin);
         fgets(editado.endereco, 50, stdin);
-            if(editado.endereco>1){
-            strcpy(vetorContatos[selecionado].endereco, editado.endereco);}
+
+        if(editado.endereco>1)
+        {
+            strcpy(vetorContatos[selecionado].endereco, editado.endereco);
+        }
 
     
         printf("\n\t NOVO Numero da residencia: ");
         fflush(stdin);
         scanf("%i",&editado.numero);
-            if(editado.numero>1){
-            strcpy(&vetorContatos[selecionado].numero, &editado.numero);}
 
+        if(editado.numero>1)
+        {
+            strcpy(&vetorContatos[selecionado].numero, &editado.numero);
+        }
 
         printf("\n\t NOVO Tipo de contato: ");
         fflush(stdin);
         scanf("%i",&editado.tcontato);
-            if(editado.tcontato>1){
-            strcpy(&vetorContatos[selecionado].tcontato, &editado.tcontato);} 
+        if(editado.tcontato>1)
+        {
+            strcpy(&vetorContatos[selecionado].tcontato, &editado.tcontato);
+        } 
     
-
         printf("\n \t NOVO Numero para contato: ");
         fflush(stdin);
         fgets(editado.contato, 50, stdin);
-            if(editado.contato>1){
-            strcpy(vetorContatos[selecionado].contato, editado.contato);}
+
+        if(editado.contato>1)
+        {
+            strcpy(vetorContatos[selecionado].contato, editado.contato);
+        }
 
 
         printf("\n \t NOVO Email: ");
         fflush(stdin);
         fgets(editado.email, 50, stdin);
-            if(editado.email>1){
-            strcpy(vetorContatos[selecionado].email, editado.email);}
+        if(editado.email>1)
+        {
+            strcpy(vetorContatos[selecionado].email, editado.email);
+        }
 
 
         printf("\n \t NOVO Tipo de rede social: ");
         fflush(stdin);
         scanf("%i",&editado.trede);
-            if(editado.trede>1){
-            strcpy(&vetorContatos[selecionado].trede, &editado.trede);}
+
+        if(editado.trede>1)
+        {
+            strcpy(&vetorContatos[selecionado].trede, &editado.trede);
+        }
 
         printf("\n \t NOVA Rede social: ");
         fflush(stdin);
         fgets(editado.redes_sociais1, 50, stdin);
-            if(editado.redes_sociais1>1){
-            strcpy(vetorContatos[selecionado].redes_sociais1, editado.redes_sociais1);}
 
-
-
-        }else{
-            printf("\n\t Esse valor ultrapassa a quantidade de contatos da Agenda! \n");
-            
+        if(editado.redes_sociais1>1)
+        {
+            strcpy(vetorContatos[selecionado].redes_sociais1, editado.redes_sociais1);
         }
+
+
+
+    }
+    else
+    {
+        printf("\n\t Esse valor ultrapassa a quantidade de contatos da Agenda! \n");
+    }
         
-    
-    
-    system("pause");
-    fclose(arq);
+    getch();
+    fflush(stdin);
+    fclose(arq); // Fechamento do arquivo
 }
 
-void mostrarContato(int i){
-	
+/* -------- SUB-ROTINA DE EXIBIÇÃO DE CONTATO --------*/
+void mostrarContato(int i)
+{
+    // Printf's exibindo as variáveis do contato com as informações
     printf("\n\t CONTATO: %i", i);
-
 	printf("\n\n\t Nome: %s", vetorContatos[i].nome);
 	printf("\t Tipo de endereco: %s", &vetorContatos[i].tendereco);
 	printf("\t Endereco: %s", vetorContatos[i].endereco);
@@ -385,56 +400,67 @@ void mostrarContato(int i){
     printf("\t Email: %s", vetorContatos[i].email);
     printf("\t Tipo de rede: %s", &vetorContatos[i].trede);
     printf("\t Rede social: %s", vetorContatos[i].redes_sociais1);
-
 }
 
-void listarContatos(){
-    
+/* -------- SUB-ROTINA DE EXIBIÇÃO DE CONTATO -------- */
+void listarContatos()
+{
 	printf("\n\t LISTA DE CONTATOS\n");
 	
+    // Laço de listagem de contatos
 	for(int i=0; i<qtd; i++){
-		mostrarContato(i);
+		mostrarContato(i); // Sub-Rotina de exibição
 		printf("\t -------- PAGINA %i--------- \n", i);
-        system("pause");
+        system("pause"); 
 	}
 
 }
 
-int compararLetras(char *a, char *b, int i, int limite){
-
-    if(a[i] == b[i]){
+/* -------- SUB-ROTINA DE COMPARAÇÃO --------*/
+int compararLetras(char *a, char *b, int i, int limite)
+{
+    if(a[i] == b[i])
+    {
         i++;
-        if(i < limite){
+        if(i < limite)
+        {
             return compararLetras(a, b, i, limite);
-        }else{
+        }
+        else
+        {
             return 1;
         }
-    }else{
+    }
+    else
+    {
         return 0;
     }
-
 }
 
-void procurarContato(){
+/* -------- SUB-ROTINA DE BUSCA --------*/
+void procurarContato()
+{
 
-    char nome[51] = {""};
+    char nome[51] = {""}; // Variável que vai obter o nome do contato a ser buscado
     
 
     printf("\n\t -- PROCURAR CONTATO -- \n");
     printf("\n\t Digite o nome do contato a ser procurado: ");
-    fgets(nome, 50, stdin);
+    fgets(nome, 50, stdin); // Digitação do contato a ser buscado
     fflush(stdin);
 
-    int limite = strlen(nome);
+    int limite = strlen(nome); 
     limite --;
 
     system("cls");
     printf("\n\t RESULTADO: \n");
 
-    for(int i = 0; i < qtd; i++){
-        if(strlen (vetorContatos[i].nome) >= limite){
-            if(compararLetras(nome, vetorContatos[i].nome, 0, limite) == 1){
-                
+    for(int i = 0; i < qtd; i++)
+    {
+        if(strlen (vetorContatos[i].nome) >= limite)
+        {
+            if(compararLetras(nome, vetorContatos[i].nome, 0, limite) == 1)
+            {
                 mostrarContato(i);
                 printf("\n\t -------------------- \n");
                 system("pause");
@@ -443,20 +469,41 @@ void procurarContato(){
     }
 }
 
-void deletarContato (){
-
-    int selecionado = 0, op = 0;   // o -1 serve para desfazer a formatacao de exibicao em mostrarContatos 
+/* -------- SUB-ROTINA DE DELETAMENTO --------*/
+void deletarContato ()
+{
+    int selecionado = 0, op = 0;   // O 1 serve para desfazer a formatação de exibição em mostrarContatos()
 
     printf("\n\t Digite numero (id) do contato: ");
-    scanf("%i", &selecionado);
+    scanf("%i", &selecionado); // Recebimento do id digitado para seleção de contato
 
-    if(selecionado > 0){
-        if(selecionado <= MAX){
+    if(selecionado > 0) // Verificação se contato é válido
+    {
+        if(selecionado <= MAX) // Verificação se contato é válido
+        {
             selecionado --;
             printf("\n\t Contato selecionado: %s \n", vetorContatos[selecionado].nome);
             system("pause");
-        }else{
+        }
+        else
+        {
             printf("\n\t Esse contato nao existe!");
         }
     }
+}
+
+/* -------- SUB-ROTINA DE PERGUNTA DE CONTINUAÇÃO --------*/
+char continuar()
+{
+    char op; // Variável de opção
+    
+    // Laço para perguntar se quer continuar
+    do
+    {
+        printf("\n\tDeseja continuar? (S OU N)");
+        
+        op = tolower (getch()); // Recebimento da resposta convertendo em caixa baixa para evitar erros
+    } while (op != 's' && op != 'n');
+    
+    return op; // Retorno da resposta
 }
