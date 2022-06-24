@@ -5,6 +5,7 @@
 #include <ctype.h>      
 #include <locale.h>
 
+//DECLARAÇÃO PRÉVIA DAS SUB-ROTINAS
 #define MAX 250
 #define DADOS 200
 #define agenda "Agenda.csv"
@@ -39,6 +40,7 @@ void procurarContato();
 void editarContato ();
 void deletarContato();
 char continuar();
+
 
 
 static int qtd = 0;     // VARIÁVEL QUE CONTA QUANTIDADE DE CONTATOS INSCRITOS
@@ -419,7 +421,7 @@ void listarContatos()
 /* -------- SUB-ROTINA DE COMPARAÇÃO --------*/
 int compararLetras(char *a, char *b, int i, int limite)
 {
-    if(a[i] == b[i])
+    if(a[i] == b[i])	//Recebe dois vetores que irao ser comparados, se o resultado for verdadeiro ele continua
     {
         i++;
         if(i < limite)
@@ -459,7 +461,7 @@ void procurarContato()
     {
         if(strlen (vetorContatos[i].nome) >= limite)
         {
-            if(compararLetras(nome, vetorContatos[i].nome, 0, limite) == 1)
+            if(compararLetras(nome, vetorContatos[i].nome, 0, limite) == 1) //Enviando os vetores para serem comparados
             {
                 mostrarContato(i);
                 printf("\n\t -------------------- \n");
@@ -472,21 +474,38 @@ void procurarContato()
 /* -------- SUB-ROTINA DE DELETAMENTO --------*/
 void deletarContato ()
 {
-    int selecionado = 0, op = 0;   // O 1 serve para desfazer a formatação de exibição em mostrarContatos()
+    contatos contatoDeletado[MAX];
+
+    FILE *arq = fopen (agenda, "a+");
+    
+    int selecionado = 0; 
+
 
     printf("\n\t Digite numero (id) do contato: ");
-    scanf("%i", &selecionado); // Recebimento do id digitado para seleção de contato
+    scanf("%i", &selecionado);
 
-    if(selecionado > 0) // Verificação se contato é válido
-    {
-        if(selecionado <= MAX) // Verificação se contato é válido
-        {
-            selecionado --;
+    if(selecionado > 0){
+        if(selecionado <= MAX){
             printf("\n\t Contato selecionado: %s \n", vetorContatos[selecionado].nome);
             system("pause");
-        }
-        else
-        {
+            
+            for (int i = 0; i < qtd; i++){
+                
+                // COPIANDO PARA O VETOR DE CONTATOS A PARTIR DE UM VETOR NULO
+                strcpy(vetorContatos[selecionado].nome, contatoDeletado[0].nome);
+                strcpy(&vetorContatos[selecionado].tendereco, &contatoDeletado[0].tendereco);
+                strcpy(vetorContatos[selecionado].endereco, contatoDeletado[0].endereco);
+                strcpy(&vetorContatos[selecionado].numero, &contatoDeletado[0].numero);
+                strcpy(&vetorContatos[selecionado].tcontato, &contatoDeletado[0].tcontato);
+                strcpy(vetorContatos[selecionado].contato, contatoDeletado[0].contato);
+                strcpy(vetorContatos[selecionado].email, contatoDeletado[0].email);
+                strcpy(&vetorContatos[selecionado].trede, &contatoDeletado[0].trede);
+                strcpy(vetorContatos[selecionado].redes_sociais1, contatoDeletado[0].redes_sociais1);
+
+                
+                }
+
+        }else{
             printf("\n\t Esse contato nao existe!");
         }
     }
