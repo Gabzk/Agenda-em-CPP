@@ -1,2 +1,3 @@
 # Ignorar diretórios de build do CMake
 build
+.vscode
